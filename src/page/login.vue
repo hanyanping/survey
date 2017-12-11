@@ -246,11 +246,20 @@
                   var setHeaderActive;
                   localStorage.setItem('chinaName',response.data.data.user.chinaName)
                   localStorage.setItem('userName',response.data.data.user.userName)
-                  localStorage.setItem('orgcode',response.data.data.user.orgcode)
-                  if(response.data.data.userfunctions.length == 1){
+                  localStorage.setItem('orgcode',response.data.data.user.orgcode);
+                  var insititueName = 0,caseNum = 0;
+                  for(let i in response.data.data.userfunctions){
+                    if(response.data.data.userfunctions[i].name == "机构管理"){
+                      insititueName++;
+                    }
+                    if(response.data.data.userfunctions[i].name == "机构管理"){
+                      caseNum++;
+                    }
+                  }
+                  if(insititueName != 0 && caseNum ==0){
                     setHeaderActive = false
                     localStorage.setItem('setHeaderActive',setHeaderActive)
-                  }else{
+                  }else if(insititueName == 0 && caseNum !=0){
                     setHeaderActive = true
                     localStorage.setItem('setHeaderActive',setHeaderActive)
                   }

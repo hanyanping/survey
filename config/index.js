@@ -11,10 +11,12 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/boot-pub-survey-manage': {
-        // target: 'http://192.168.1.69:18081',      // 志猛个人服务器
+        // target: 'http://192.168.1.185:8080',      // 志猛个人服务器
         // target: 'http://192.168.1.113:9099',      // 和鹏个人服务器
         // target: 'http://192.168.1.18:8080',//元鹏
-        target: 'https://chakan.zhongchebaolian.com', // 测试
+        // target: 'https://chakan.zhongchebaolian.com', // 正式
+        target: 'https://survey.zhongchebaolian.com', // 测试
+
         changeOrigin: true,
         pathRewrite: {
           '^/boot-pub-survey-manage': '/boot-pub-survey-manage'

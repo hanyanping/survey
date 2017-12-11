@@ -1,120 +1,237 @@
 <template>
-  <div class="caseList">
-    <div class="insitutionTab">
-      <span class="insitutionTitle active">查勘员管理</span>
-      <div class="lineBox"></div>
-    </div>
-    <div class="caseListHeader">
-      <form>
-        <span>姓名:</span>
-        <input type="text" v-model="surveyUserName" placeholder="请输入查勘员姓名"/>
-        <span>手机号:</span>
-        <input type="tel" v-model="phone" placeholder="请输入手机号" maxlength="11"/>
-        <span>所属城市:</span>
-        <el-select v-model="affiliateCityCode" name="" placeholder="请选择城市">
-          <el-option
-            v-for="item in cityOptions"
-            :key="item.companyName"
-            :label="item.companyName"
-            :value="item.companyCode">
-          </el-option>
-        </el-select>
-        <span>所属单位:</span>
-        <el-select v-model="affiliateCompanyCode" name="" placeholder="请选择单位">
-          <el-option
-            v-for="item in companeyOptions"
-            :key="item.companyName"
-            :label="item.companyName"
-            :value="item.companyCode">
-          </el-option>
-        </el-select>
-        <span>账号状态:</span>
-        <el-select v-model="accountStatus"  name="case" placeholder="请选择账号状态">
-          <el-option
-            v-for="item in surveyOption"
-            :key="item.code"
-            :label="item.name"
-            :value="item.code">
-          </el-option>
-        </el-select>
-        <div class="buttonBox">
-          <span class="caseListSure" @click="formSure">确定 </span>
-          <span class="caseListReset" @click="resetData">重置</span>
-        </div>
+  <div>
+    <div class="insititutListDialog hide">
+      <div class="insititutListDialogBox">
+        <span @click="closinsititutMontor" class="closinsititutMontor">×</span>
+        <div class="oneMonitor clear">
+          <h4 class="dialogTitle">查勘员信息</h4>
+          <div class="clear scrollBox">
+            <div class="surveyInfo">
+              <div class="imgBox">
+               <img src="../images/kefuBlue.png"/>
+                <span class="editorSurvey" @click="openEditor">
+                  编辑
+                </span>
+              </div>
 
-      </form>
-    </div>
-    <div class="caseListTable" v-if="tableActive">
-      <div class="tableTitle">
-        <span>共: {{pages}}页,</span>
-        <span>{{totalCount}}条, </span>
-        <span>当前页: {{currentCount}}条</span>
-      </div>
-      <table class="table" border="0" cellspacing="0" cellpadding="0" style="border-top: 1px solid #bbb;">
-        <thead>
-        <tr>
-          <th style="border-left:1px solid #bbb;">
-            编号
-          </th>
-          <th>
-            报案人车牌号
-          </th>
-          <th>
-            报案人姓名
-          </th>
-          <th>
-            报案人手机号
-          </th>
-          <th style="width:16%;">
-            保险公司
-          </th>
-          <th style="width:12%;">
-            事故时间
-          </th>
-          <th style="width:18%;">
-            事故地点
-          </th>
-          <th>
-            案件状态
-          </th>
-          <th>
-            视频发起次数
-          </th>
-          <th>
-            操作
-          </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item,index) in tableData">
-          <td>{{index+1}}</td>
-          <td>{{item.surveyUserName}}</td>
-          <td>{{item.reporterName}}</td>
-          <td>{{item.phone}}</td>
-          <td>{{item.insuranceCompanyName}}</td>
-          <td style="width:160px;">{{item.accidentTime}}</td>
-          <td>{{item.accidentAddress}}</td>
-          <td>{{item.survey}}</td>
-          <td>{{item.videoConnectRequestCount}}</td>
-          <td ><span v-if="item.surveyorStatus == '13'" class="listAssign" @click="signSeats(item.id)" >指派</span><i v-if="item.surveyorStatus == '13'">|</i><span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
-        </tr>
-        </tbody>
-      </table>
-      <div>
-        <el-pagination  @current-change="handleCurrentChange"
-                        :current-page="page"
-                        :page-size = "pageSize"
-                        layout="prev,pager,next"
-                        :total="totalCount">
-        </el-pagination>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">姓名:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">电话:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">职位:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">编号:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">所在城市:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">所属公司:</span>
+                <span class="infoDetail">北京姑娘中看过接口接口坎坎坷坷方法</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">账号状态:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">接单次数:</span>
+                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="caseListTable" v-else>
-      <p style="text-align:center;padding: 15px 0;">暂无数据</p>
+    <div class="surveyDialog hide">
+      <div class="insititutListDialogBox">
+        <span @click="closeSurvey" class="closinsititutMontor">×</span>
+        <div class="oneMonitor clear">
+          <h4 class="dialogTitle">添加查勘员</h4>
+          <div class="clear scrollBox">
+            <div style="margin-top:20px;">
+              <div class="addinsitituteInput">
+                <span>查勘员姓名</span>
+                <input type="text" v-model="userchinaname" placeholder="请输入查勘员姓名"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span>查勘员手机号</span>
+                <input type="tel" v-model="userphone" maxlength="11" placeholder="请输入查勘员手机号"/>
+              </div>
+              <div class="addinsitituteInput">
+                <span>头像</span>
+
+                 <el-upload
+                   class="avatar-uploader"
+                   action="https://jsonplaceholder.typicode.com/posts/"
+                   :show-file-list="false"
+                   :on-success="handleAvatarSuccess">
+                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                 </el-upload>
+
+              </div>
+              <!--<div class="addinsitituteInput">-->
+                <!--<span>所属城市</span>-->
+                <!--<select v-model="insurecode">-->
+                  <!--<option value="">请选择所属单位</option>-->
+                  <!--<option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>-->
+                <!--</select>-->
+              <!--</div>-->
+              <div class="addinsitituteInput">
+                <span>所属单位</span>
+                <select v-model="insurecode">
+                  <option value="">请选择所属单位</option>
+                  <option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span>帐号状态</span>
+                <select v-model="islocked">
+                  <option value="0">正常</option>
+                  <option value="1">锁定</option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="addinsitituteSure backColorGreen" @click="addSurvey">确定</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <case-detail v-if="caseDetailActive"></case-detail>
-    <sign-Seats v-if="signSeatsActive"></sign-Seats>
-    <!--&lt;!&ndash;layout="total,prev,pager, next,jumper"&ndash;&gt;layout="total,prev,pager, next,jumper"-->
+    <div class="caseList">
+      <div class="insitutionTab">
+        <span class="insitutionTitle active">查勘员管理</span>
+        <div class="lineBox"></div>
+        <span class="addSurveyMember" @click="openSurvey">添加查勘员</span>
+      </div>
+      <div class="caseListHeader">
+        <form>
+          <span>姓名:</span>
+          <input type="text" v-model="surveyUserName" placeholder="请输入查勘员姓名"/>
+          <span>手机号:</span>
+          <input type="tel" v-model="phone" placeholder="请输入手机号" maxlength="11"/>
+          <span>开通省份</span>
+          <el-select v-model="provinces" name="" placeholder="请选择省份">
+            <el-option
+              v-for="item in provincesOption"
+              :key="item.name"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <!--<select v-model="provinces">-->
+            <!--<option value="">请选择开通省份</option>-->
+            <!--<option  v-for="item in provincesOption" :value="item.id">{{item.name}}</option>-->
+          <!--</select>-->
+          <span>所属城市:</span>
+          <el-select v-model="affiliateCityCode" name="" placeholder="请选择城市">
+            <el-option
+              v-for="item in cityOptions"
+              :key="item.name"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+          <span>所属单位:</span>
+          <el-select v-model="affiliateCompanyCode" name="" placeholder="请选择单位">
+            <el-option
+              v-for="item in companeyOptions"
+              :key="item.companyName"
+              :label="item.companyName"
+              :value="item.companyCode">
+            </el-option>
+          </el-select>
+          <span>账号状态:</span>
+          <el-select v-model="accountStatus"  name="case" placeholder="请选择账号状态">
+            <el-option
+              v-for="item in surveyOption"
+              :key="item.code"
+              :label="item.name"
+              :value="item.code">
+            </el-option>
+          </el-select>
+            <span class="caseListSure" @click="formSure">确定 </span>
+            <span class="caseListReset" @click="resetData">重置</span>
+        </form>
+      </div>
+      <div class="caseListTable" v-if="tableActive">
+        <div class="tableTitle">
+          <span>共: {{pages}}页,</span>
+          <span>{{totalCount}}条, </span>
+          <span>当前页: {{currentCount}}条</span>
+        </div>
+        <table class="table" border="0" cellspacing="0" cellpadding="0" style="border-top: 1px solid #bbb;">
+          <thead>
+          <tr>
+            <th style="border-left:1px solid #bbb;">
+              编号
+            </th>
+            <th>
+              查勘员姓名
+            </th>
+            <th>
+              查勘员手机号
+            </th>
+            <th>
+              所属城市
+            </th>
+            <th style="width:16%;">
+              所属单位
+            </th>
+            <th style="width:12%;">
+              添加时间
+            </th>
+            <th style="width:18%;">
+              账号状态
+            </th>
+            <th>
+              接单次数
+            </th>
+            <th>
+              操作
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item,index) in tableData">
+            <td>{{index+1}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.affiliateCity}}</td>
+            <td>{{item.affiliateCompany}}</td>
+            <td style="width:160px;">{{item.joinTime}}</td>
+            <td>{{item.accountStatu}}</td>
+            <td>{{item.orderTakeCount}}</td>
+            <td ><span class="listView" @click="goSurveyDetail(item.id,item.surveyStatus)">查看</span></td>
+          </tr>
+          </tbody>
+        </table>
+        <div style="padding-bottom: 15px;">
+          <el-pagination  @current-change="handleCurrentChange"
+                          :current-page="page"
+                          :page-size = "pageSize"
+                          layout="prev,pager,next"
+                          :total="totalCount">
+          </el-pagination>
+        </div>
+      </div>
+      <div class="caseListTable" v-else>
+        <p style="text-align:center;padding: 15px 0;">暂无数据</p>
+      </div>
+      <case-detail v-if="caseDetailActive"></case-detail>
+      <sign-Seats v-if="signSeatsActive"></sign-Seats>
+      <!--&lt;!&ndash;layout="total,prev,pager, next,jumper"&ndash;&gt;layout="total,prev,pager, next,jumper"-->
+    </div>
   </div>
 </template>
 <script>
@@ -124,6 +241,14 @@
   export default {
     data() {
       return {
+        imageUrl: '',
+        userchinaname:"",
+        userphone:"",
+        insurecode:"",
+        insurecodeOption:[],
+        imageUrl: '',
+        islocked: "0",
+        provinces: '',
         tableActive: false,
         phone: "",
         surveyUserName: "",
@@ -141,6 +266,7 @@
           {"name":"正常","code":"0"},
           {"name":"锁定","code":"1"}
         ],
+        provincesOption:[],
         page: 1,
         currentCount: "",
         survey: "",
@@ -153,9 +279,26 @@
         signSeatsActive: false,
         caseListActive: false,
         time: '',
+        file:''
       }
     },
     watch: {
+        "provinces": function(){
+          axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/"+this.provinces+"/citys")
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.affiliateCityCode = '';
+                this.cityOptions = response.data.data;
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
       getUserIcons(val) {
         this.caseDetailActive = val;
       },
@@ -179,7 +322,68 @@
       this.caseDetailActive = this.$store.state.caseDetailActive;
     },
     methods: {
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.file = file;
+        console.log(file)
+      },
+//      beforeAvatarUpload(file) {
+//        const isJPG = file.type === 'image/jpeg';
+//        const isLt2M = file.size / 1024 / 1024 < 2;
+//
+//        if (!isJPG) {
+//          this.$message.error('上传头像图片只能是 JPG 格式!');
+//        }
+//        if (!isLt2M) {
+//          this.$message.error('上传头像图片大小不能超过 2MB!');
+//        }
+//        return isJPG && isLt2M;
+//      },
+      addSurvey(){
+        var param = new FormData();
+        console.log(param)
+        param.append('file',this.file);
+        param.append('h',150);
+        param.append('w',120);
+        param.append('method',"post");
+        var config = {
+          headers:{'Content-Type':'multipart/form-data',
+            'data-ajax':'false'}
+        };
+        console.log(param)
+        axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",param,config)
+          .then(response => {
+            if(response.data.rescode == 200){
 
+            }else{
+              if(response.data.rescode == 215){
+                this.open2(response.data.resdes)
+              }else if(response.data.rescode == 300){
+                this.$router.push({path:'/'})
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+
+      openSurvey(){
+        $(".surveyDialog").removeClass("hide");
+      },
+      openEditor(){
+        $(".surveyDialog").removeClass("hide");
+      },
+      closinsititutMontor(){//关闭查看遮盖层
+        $(".insititutListDialog ").addClass("hide");
+      },
+      closeSurvey(){
+        $(".surveyDialog").addClass("hide");
+      },
       open4(resdes) {
         this.$message.error(resdes);
       },
@@ -228,6 +432,20 @@
           .catch((error) => {
             console.log(error)
           })
+          axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/provinceinsure")
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.provincesOption = response.data.data.provinces
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+
       },
       getCaseList() {
         var paramData = {
@@ -250,14 +468,10 @@
                 this.currentCount = response.data.data.size;
                 this.pages = response.data.data.pages;
                 for(let i in this.tableData){
-                  if(this.tableData[i].surveyStatus == '06'){
-                    this.tableData[i].survey = "待查勘"
-                  }else if(this.tableData[i].surveyStatus == '07'){
-                    this.tableData[i].survey = "查勘中"
-                  }else if(this.tableData[i].surveyStatus == '08'){
-                    this.tableData[i].survey = "已查勘"
-                  }else if(this.tableData[i].surveyStatus == '11'){
-                    this.tableData[i].survey = "已取消"
+                  if(this.tableData[i].accountStatus == '0'){
+                    this.tableData[i].accountStatu = "正常"
+                  }else if(this.tableData[i].accountStatus == '1'){
+                    this.tableData[i].accountStatu = "锁定"
                   }
                 }
               }else{
@@ -297,25 +511,26 @@
         this.page = currentPage;
         this.getCaseList()
       },
-      goCaseDetail(id,orderStatus){
-        var paramData = {
-          "id": parseInt(id),
-          "orderStatus": orderStatus
-        }
-        axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
-          .then(response => {
-            if(response.data.rescode == 200){
-              var data = JSON.stringify(response.data.data)
-              localStorage.setItem("caseDetailData",data);
-              this.$store.commit('setCaseDetailActive', true);
-              this.caseDetailActive = this.$store.state.caseDetailActive;
-            }
-          }, err => {
-            console.log(err);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+      goSurveyDetail(id,orderStatus){
+        $(".insititutListDialog ").removeClass("hide");
+//        var paramData = {
+//          "id": parseInt(id),
+//          "orderStatus": orderStatus
+//        }
+//        axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
+//          .then(response => {
+//            if(response.data.rescode == 200){
+//              var data = JSON.stringify(response.data.data)
+//              localStorage.setItem("caseDetailData",data);
+//              this.$store.commit('setCaseDetailActive', true);
+//              this.caseDetailActive = this.$store.state.caseDetailActive;
+//            }
+//          }, err => {
+//            console.log(err);
+//          })
+//          .catch((error) => {
+//            console.log(error)
+//          })
       }
     },
     components: {
@@ -340,6 +555,133 @@
 
 </script>
 <style scoped>
+  .insititutListDialog,.surveyDialog{
+    background: rgba(0,0,0,0.3);
+    width:100%;
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 100;
+  }
+  .insititutListDialogBox{
+    width: 38%;
+    margin: 8vh auto;
+    background: #fff;
+    padding: 20px;
+    max-height: 70vh;
+    position: relative;
+  }
+  .insititutListDialog .dialogTitle,.surveyDialog .dialogTitle{
+    color: #232323;
+    font-size:16px;
+    font-weight: 600;
+  }
+
+  .insititutListDialog .scrollBox, .surveyDialo .scrollBox{
+    height: 55vh;
+  }
+  .insititutListDialog .surveyInfo{
+    width: 70%;
+    margin: 15px auto;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    -webkit-box-shadow: 0px 0px 10px 5px #f4f4f4;
+    -moz-box-shadow: 0px 0px 10px 5px #f4f4f4;
+    box-shadow: 0px 0px 10px 5px #f4f4f4;
+    padding-bottom: 15px;
+  }
+  .infoDetail{
+    border-bottom: 1px solid #bbb;
+    display: inline-block;
+    max-width: 50%;
+    min-width:50%;
+    padding-bottom: 5px;
+  }
+  .imgBox img{
+    height: 68px;
+    width: 68px;
+    margin:0 auto;
+  }
+  .imgBox{
+    text-align: center;
+    padding: 10px;
+    position: relative;
+  }
+  .imgBox .editorSurvey{
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    color: #2EAB3B;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-left: 10px;
+    padding: 6px 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+  .carInfoBox p{
+    line-height: 25px;
+    font-weight: normal;
+    font-style: normal;
+  }
+
+ .closinsititutMontor{
+    font-size: 42px;
+    right: 15px;
+    top: 0;
+    position: absolute;
+  }
+  .surveyDialog .addinsitituteSure{
+    color: #fff;
+    font-size: 15px;
+    display: inline-block;
+    line-height: 35px;
+    height: 35px;
+    width: 100px;
+    text-align: center;
+    border-radius: 5px;
+    margin-left: 18%;
+    cursor: pointer;
+  }
+  .surveyDialog .addinsitituteInput{
+    padding: 10px 0 10px 10%;
+  }
+ .surveyDialog .addinsitituteInput span{
+    display: inline-block;
+    min-width:23%;
+  }
+  .surveyDialog .addinsitituteInput input,.surveyDialog .addinsitituteInput select{
+    height:35px;
+    line-height:35px;
+    padding-left: 6px;
+    border: 1px solid #bbb;
+    border-radius:4px;
+    width: 40%;
+  }
+  .insititutListDialog .addinsitituteInput{
+    padding: 10px 0 10px 0;
+    text-align: center;
+  }
+  .insititutListDialog .addinsitituteInput .spanInfo{
+    display: inline-block;
+    width: 20%;
+  }
+   .addSurveyMember{
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    border: 1px solid #2EAB3B;
+    color: #2EAB3B;
+    font-size: 15px;
+    border-radius: 5px;
+    margin-left: 10px;
+    padding: 6px 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
   .caseList .insitutionTab .insitutionTitle{
     cursor: pointer;
     display: inline-block;
@@ -353,10 +695,7 @@
     font-size: 15px;
     color: #2EAB3B;
   }
-  .buttonBox{
-    margin: 10px 0;
-    text-align: center;
-  }
+
   .insitutionTab .lineBox{
     width: 90%;
     height: 1px;
@@ -368,6 +707,7 @@
     width: 86%;
     margin: 15px auto;
     padding-top: 15px;
+    position: relative;
   }
   .insitutionTab .insitutionTitle{
     cursor: pointer;
@@ -389,7 +729,7 @@
     margin: 0 auto;
   }
 .caseListHeader{
-  width: 90%;
+  width: 88%;
   margin: 0 auto;
 }
   .caseListHeader form{
@@ -418,10 +758,11 @@
     font-size: 15px;
     border-radius: 5px;
     margin-left: 10px;
-    padding: 10px 40px;
+    padding: 8px 30px;
     display: inline-block;
     margin-bottom: 5px;
     cursor: pointer;
+    margin-top: 15px;
   }
   .caseListSure{
     color: #fff;
@@ -430,6 +771,8 @@
   .caseListTable{
     padding-top: 10px;
     border-top: 1px solid #bbb;
+    width: 86%;
+    margin: 0 auto;
   }
   .caseListTable .tableTitle{
     margin-bottom: 10px;
