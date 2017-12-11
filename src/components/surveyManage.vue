@@ -60,17 +60,20 @@
             <div style="margin-top:20px;">
               <div class="addinsitituteInput">
                 <span>查勘员姓名</span>
-                <input type="text" v-model="userchinaname" placeholder="请输入查勘员姓名"/>
+                <input type="text" class="inputBox" v-model="userchinaname" placeholder="请输入查勘员姓名"/>
               </div>
               <div class="addinsitituteInput">
                 <span>查勘员手机号</span>
-                <input type="tel" v-model="userphone" maxlength="11" placeholder="请输入查勘员手机号"/>
+                <input type="tel" class="inputBox" v-model="userphone" maxlength="11" placeholder="请输入查勘员手机号"/>
               </div>
               <div class="addinsitituteInput">
                 <span>头像</span>
                  <form>
-                   <input type="file" @change="getFile($event)">
-                  </form>
+                    <div class="file">
+                      选择文件
+                       <input class="fileInput" type="file" @change="getFile($event)">
+                    </div>
+                 </form>
 
                  <el-upload
                    class="avatar-uploader"
@@ -91,14 +94,14 @@
               <!--</div>-->
               <div class="addinsitituteInput">
                 <span>所属单位</span>
-                <select v-model="insurecode">
+                <select v-model="insurecode" class="selectBox">
                   <option value="">请选择所属单位</option>
                   <option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span>帐号状态</span>
-                <select v-model="islocked">
+                <select v-model="islocked" class="selectBox">
                   <option value="0">正常</option>
                   <option value="1">锁定</option>
                 </select>
@@ -605,6 +608,32 @@
 
 </script>
 <style scoped>
+  .file {
+    position: relative;
+    display: inline-block;
+    background: #D0EEFF;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding: 4px 12px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+  }
+  .file .fileInput {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+  }
+  .file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+  }
   .insititutListDialog,.surveyDialog{
     background: rgba(0,0,0,0.3);
     width:100%;
@@ -702,7 +731,7 @@
     display: inline-block;
     min-width:23%;
   }
-  .surveyDialog .addinsitituteInput input,.surveyDialog .addinsitituteInput select{
+  .surveyDialog .addinsitituteInput .inputBox,.surveyDialog .addinsitituteInput .selectBox{
     height:35px;
     line-height:35px;
     padding-left: 6px;

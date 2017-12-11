@@ -102,7 +102,7 @@
                     <img src="../images/kefuBlue.png">
                   </div>
                   <div class="seatInfo">
-                    <h3 class="kefuName">张扬</h3>
+                    <h3 class="kefuName">{{item.webSurveyorName}}</h3>
                     <p class="carInfoOne" >当前状态：空闲
                     </p>
                     <p class="carInfoOne">待处理案件：{{item.waitForProcessOrderCount}}单</p>
