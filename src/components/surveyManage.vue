@@ -68,6 +68,12 @@
               </div>
               <div class="addinsitituteInput">
                 <span>头像</span>
+                 <form>
+                    <input type="text" value="" v-model="name" placeholder="请输入用户名">
+                    <input type="text" value="" v-model="age" placeholder="请输入年龄">
+                    <input type="file" @change="getFile($event)">
+                    
+                  </form>
 
                  <el-upload
                    class="avatar-uploader"
@@ -339,37 +345,84 @@
 //        }
 //        return isJPG && isLt2M;
 //      },
+        getFile(event) {
+          this.file = event.target.files[0];
+          console.log(this.file);
+          event.preventDefault();
+          let formData = new FormData();
+          formData.append('file', this.file);
+          let config = {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+          axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",formData,config)
+            .then(response => {
+              console.log(response)
+              if(response.data.rescode == 200){
+
+              }else{
+                if(response.data.rescode == 215){
+                  this.open2(response.data.resdes)
+                }else if(response.data.rescode == 300){
+                  this.$router.push({path:'/'})
+                }else{
+                  this.open4(response.data.resdes)
+                }
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
+      submitForm(event) {
+
+//        formData.append('name', this.name);
+//        formData.append('age', this.age);
+
+
+
+      },
       addSurvey(){
         var param = new FormData();
-        console.log(param)
-        param.append('file',this.file);
-        param.append('h',150);
-        param.append('w',120);
-        param.append('method',"post");
-        var config = {
-          headers:{'Content-Type':'multipart/form-data',
-            'data-ajax':'false'}
-        };
-        console.log(param)
-        axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",param,config)
-          .then(response => {
-            if(response.data.rescode == 200){
+        param.append('file',document.getElementById('form1'));
 
-            }else{
-              if(response.data.rescode == 215){
-                this.open2(response.data.resdes)
-              }else if(response.data.rescode == 300){
-                this.$router.push({path:'/'})
-              }else{
-                this.open4(response.data.resdes)
-              }
-            }
-          }, err => {
-            console.log(err);
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+        var config = {
+          headers:{'Content-Type': 'multipart/form-data',
+           }
+        };
+        console.log(param.get('file'))
+        axios({
+          method: 'post',
+          url: this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          data: param
+        }).then(response => {
+
+        })
+//        axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",param,config)
+//          .then(response => {
+//            if(response.data.rescode == 200){
+//
+//            }else{
+//              if(response.data.rescode == 215){
+//                this.open2(response.data.resdes)
+//              }else if(response.data.rescode == 300){
+//                this.$router.push({path:'/'})
+//              }else{
+//                this.open4(response.data.resdes)
+//              }
+//            }
+//          }, err => {
+//            console.log(err);
+//          })
+//          .catch((error) => {
+//            console.log(error)
+//          })
       },
 
       openSurvey(){
