@@ -135,18 +135,7 @@
           <h4 class="dialogTitle">案件监控</h4>
           <p class="titleInfo">当日坐席超过2次30s内未接听视频的</p>
           <div class="clear scrollBox">
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorRed" v-if="item.currentTimeStatus == 2">
-              <div class="imgBox">
-                <img src="../images/kefuBlue.png">
-                <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
-              </div>
-              <p class="carInfoOne" style="margin-top:10px;">当前状态：繁忙<span class="orderTime">（处理中）</span></p>
-              <p class="carInfoOne">待处理案件：{{item.waitProcessSurveyCount }}单</p>
-              <p class="carInfoOne">今日已处理案件：{{item.todayProcessCompletSurveyCount }}单</p>
-              <p class="carInfoOne">今日登陆时间：{{item.todayLoginTime}}</p>
-              <p class="carInfoOne orderTime">今日30s内未接听次数：{{item.todayWithinThirtySecondsNotAnswerCount}}次</p>
-            </div>
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGreen" v-if="item.currentTimeStatus ==0">
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGreen" v-if="item.currentStatusAuto ==0 && item.currentStatusManual  == 0">
               <div class="imgBox">
                 <img src="../images/kefuBlue.png">
                 <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
@@ -157,7 +146,19 @@
               <p class="carInfoOne">今日登陆时间：{{item.todayLoginTime}}</p>
               <p class="carInfoOne orderTime">今日30s内未接听次数：{{item.todayWithinThirtySecondsNotAnswerCount}}次</p>
             </div>
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGray" v-if="item.currentTimeStatus == 1">
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorRed" v-if="item.currentStatusAuto == 2 || item.currentStatusManual  == 2">
+              <div class="imgBox">
+                <img src="../images/kefuBlue.png">
+                <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
+              </div>
+              <p class="carInfoOne" style="margin-top:10px;">当前状态：繁忙</p>
+              <p class="carInfoOne">待处理案件：{{item.waitProcessSurveyCount }}单</p>
+              <p class="carInfoOne">今日已处理案件：{{item.todayProcessCompletSurveyCount }}单</p>
+              <p class="carInfoOne">今日登陆时间：{{item.todayLoginTime}}</p>
+              <p class="carInfoOne orderTime">今日30s内未接听次数：{{item.todayWithinThirtySecondsNotAnswerCount}}次</p>
+            </div>
+
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGray" v-if="(item.currentStatusAuto == 1 || item.currentStatusAuto == null) && (item.currentStatusManual == 1 || item.currentStatusManual == null)">
               <div class="imgBox">
                 <img src="../images/kefuBlue.png">
                 <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
