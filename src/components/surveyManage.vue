@@ -69,10 +69,7 @@
               <div class="addinsitituteInput">
                 <span>头像</span>
                  <form>
-                    <input type="text" value="" v-model="name" placeholder="请输入用户名">
-                    <input type="text" value="" v-model="age" placeholder="请输入年龄">
-                    <input type="file" @change="getFile($event)">
-                    
+                   <input type="file" @change="getFile($event)">
                   </form>
 
                  <el-upload
