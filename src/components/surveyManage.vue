@@ -59,31 +59,29 @@
           <div class="clear scrollBox">
             <div style="margin-top:20px;">
               <div class="addinsitituteInput">
-                <span>查勘员姓名</span>
-                <input type="text" class="inputBox" v-model="userchinaname" placeholder="请输入查勘员姓名"/>
+                <span class="spanInfo">查勘员姓名</span>
+                <input type="text" :value="surveyor" class="inputBox"  placeholder="请输入查勘员姓名"/>
               </div>
               <div class="addinsitituteInput">
-                <span>查勘员手机号</span>
-                <input type="tel" class="inputBox" v-model="userphone" maxlength="11" placeholder="请输入查勘员手机号"/>
+                <span class="spanInfo">查勘员手机号</span>
+                <input type="tel" :value="surveyorphone" class="inputBox"  maxlength="11" placeholder="请输入查勘员手机号"/>
               </div>
               <div class="addinsitituteInput">
-                <span>头像</span>
-                 <form>
-                    <div class="file">
-                      选择文件
-                       <input class="fileInput" type="file" @change="getFile($event)">
-                    </div>
-                 </form>
-
-                 <el-upload
-                   class="avatar-uploader"
-                   action="https://jsonplaceholder.typicode.com/posts/"
-                   :show-file-list="false"
-                   :on-success="handleAvatarSuccess">
-                   <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                 </el-upload>
-
+                <span class="spanInfo">头像</span>
+                <form style="margin-left:10%;">
+                  <div class="file">
+                    <span style="color:#2EAB3B;" v-if="imgUrl ==''"> 上传</span>
+                    <span  style="color:#2EAB3B;" v-else> 重新上传</span>
+                    <input class="fileInput" type="file" @change="getFile($event)">
+                    <!--<button @click="submitForm($event)">提交</button>-->
+                  </div>
+                </form>
+                  <div v-if="imgUrl !=''" style="margin-left:10%;">
+                    <img  :src="imgUrl"/>
+                  </div>
+                  <div v-else style="margin-left:10%;">
+                    <img  src="../images/file.png"/>
+                  </div>
               </div>
               <!--<div class="addinsitituteInput">-->
                 <!--<span>所属城市</span>-->
@@ -93,14 +91,14 @@
                 <!--</select>-->
               <!--</div>-->
               <div class="addinsitituteInput">
-                <span>所属单位</span>
+                <span class="spanInfo">所属单位</span>
                 <select v-model="insurecode" class="selectBox">
                   <option value="">请选择所属单位</option>
                   <option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
-                <span>帐号状态</span>
+                <span class="spanInfo">帐号状态</span>
                 <select v-model="islocked" class="selectBox">
                   <option value="0">正常</option>
                   <option value="1">锁定</option>
@@ -247,7 +245,16 @@
   export default {
     data() {
       return {
-        imageUrl: '',
+        surveyor:'',
+        surveyorphone:"",
+        headicon:'',
+        citycode:"",
+        cityname:"",
+        compnaycode:"",
+        companyename:"",
+        isvalid:"",
+        addprovincesOption:[],
+        addCityOPtion:[],
         userchinaname:"",
         userphone:"",
         insurecode:"",
@@ -268,6 +275,7 @@
         accountStatus: '',
         pageSize: 10,
         pages: '',
+        imgUrl: '',
         surveyOption:[
           {"name":"正常","code":"0"},
           {"name":"锁定","code":"1"}
@@ -328,29 +336,16 @@
       this.caseDetailActive = this.$store.state.caseDetailActive;
     },
     methods: {
-      handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
-        this.file = file;
-        console.log(file)
-      },
-//      beforeAvatarUpload(file) {
-//        const isJPG = file.type === 'image/jpeg';
-//        const isLt2M = file.size / 1024 / 1024 < 2;
-//
-//        if (!isJPG) {
-//          this.$message.error('上传头像图片只能是 JPG 格式!');
-//        }
-//        if (!isLt2M) {
-//          this.$message.error('上传头像图片大小不能超过 2MB!');
-//        }
-//        return isJPG && isLt2M;
-//      },
+
         getFile(event) {
           this.file = event.target.files[0];
           console.log(this.file);
           event.preventDefault();
           let formData = new FormData();
           formData.append('file', this.file);
+          formData.append('h', "h_150");
+          formData.append('w', "w_120");
+          formData.append('method', "post");
           let config = {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -358,9 +353,9 @@
           }
           axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",formData,config)
             .then(response => {
-              console.log(response)
-              if(response.data.rescode == 200){
-
+              console.log(response.status)
+              if(response.status == 200){
+                this.imgUrl = response.data;
               }else{
                 if(response.data.rescode == 215){
                   this.open2(response.data.resdes)
@@ -379,8 +374,7 @@
         },
       submitForm(event) {
 
-//        formData.append('name', this.name);
-//        formData.append('age', this.age);
+
 
 
 
@@ -427,9 +421,25 @@
 
       openSurvey(){
         $(".surveyDialog").removeClass("hide");
+        this.getProvince()
       },
       openEditor(){
         $(".surveyDialog").removeClass("hide");
+      },
+      getProvince(){
+        axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/provinceinsure")
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.addprovincesOption = response.data.data.provinces
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       },
       closinsititutMontor(){//关闭查看遮盖层
         $(".insititutListDialog ").addClass("hide");
@@ -609,17 +619,20 @@
 </script>
 <style scoped>
   .file {
+    cursor: pointer;
+    width: 90px;
+    text-align: center;
     position: relative;
     display: inline-block;
-    background: #D0EEFF;
-    border: 1px solid #99D3F5;
+    background: #E2F8E4;
+    border: 1px solid #2EAB3B;
     border-radius: 4px;
     padding: 4px 12px;
     overflow: hidden;
-    color: #1E88C7;
     text-decoration: none;
     text-indent: 0;
     line-height: 20px;
+
   }
   .file .fileInput {
     position: absolute;
@@ -644,7 +657,7 @@
     z-index: 100;
   }
   .insititutListDialogBox{
-    width: 38%;
+    width: 600px;
     margin: 8vh auto;
     background: #fff;
     padding: 20px;
@@ -727,9 +740,9 @@
   .surveyDialog .addinsitituteInput{
     padding: 10px 0 10px 10%;
   }
- .surveyDialog .addinsitituteInput span{
+ .surveyDialog .addinsitituteInput .spanInfo{
     display: inline-block;
-    min-width:23%;
+    min-width:95px;
   }
   .surveyDialog .addinsitituteInput .inputBox,.surveyDialog .addinsitituteInput .selectBox{
     height:35px;
