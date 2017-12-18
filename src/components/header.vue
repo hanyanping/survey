@@ -301,18 +301,18 @@
                 <input class="creatInput"  :value="accidentaddress" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
                 <i class="el-icon-location" @click="openAdressDialog"></i>
               </div>
-              <!--<div class="addinsitituteInput">-->
-                <!--<span class="addinsitituteSpan">指派</span>-->
-                <!--<select class="creatInput" v-model="sign">-->
-                  <!--<option value="1" >坐席</option>-->
-                  <!--<option value="0">点我达</option>-->
-                  <!--<option value="2">顺丰</option>-->
-                <!--</select>-->
-              <!--</div>-->
               <div class="addinsitituteInput">
-                <span class="radio__inner" @click="checkRadio"></span>
-                <span style="margin-left:6px;">只派坐席</span>
+                <span class="addinsitituteSpan">指派</span>
+                <select class="creatInput" v-model="sign">
+                  <option value="1" >坐席</option>
+                  <option value="0">点我达</option>
+                  <option value="2">顺丰</option>
+                </select>
               </div>
+              <!--<div class="addinsitituteInput">-->
+                <!--<span class="radio__inner" @click="checkRadio"></span>-->
+                <!--<span style="margin-left:6px;">只派坐席</span>-->
+              <!--</div>-->
               <div class="addinsitituteInput">
                 <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
               </div>
@@ -365,8 +365,8 @@
           <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
             <el-tab-pane  label="机构管理" name="third">
             </el-tab-pane>
-            <!--<el-tab-pane  label="查勘员管理" name="four">-->
-            <!--</el-tab-pane>-->
+            <el-tab-pane  label="查勘员管理" name="four">
+            </el-tab-pane>
           </el-tabs>
         </div>
       </div>
@@ -590,9 +590,9 @@
           }else if(this.orgCode == ""){
             this.open4("请选择处理机构")
           }
-//          else if(this.surveyType == ""){
-//            this.open4("请选择查勘类型")
-//          }
+          else if(this.surveyType == ""){
+            this.open4("请选择查勘类型")
+          }
           else if(this.accidentaddress == ""){
             this.open4("请输入事故地点")
           }else {
@@ -611,7 +611,7 @@
               "accidentaddress": this.accidentaddress,
               "lng": this.lng,
               "lat": this.lat,
-              "mark": this.mark,
+              "mark": this.sign,
             }
             axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
               .then(response => {
@@ -633,7 +633,7 @@
                     $(".radio__inner").addClass("isChecked");
                     this.mark = "1";
                     this.sign = '1';
-                    this.surveyType = '';
+                    this.surveyType = '1';
                     this.getCity = "京";
                     this.cityName = "";
                     this.open2("创建成功");

@@ -496,36 +496,50 @@ export default {
           var data = this.coordinates;
           var num = 0;
 
-          for(let i in data){
-            if(data[i].longitude === null){
-              num++
-            }
+          var paramData = {
+            "surveyno": this.surveyNo
           }
-          if(num == 0){
-            $(".mapBox").toggleClass("hide");
-            if($('.mapBox').attr('class').indexOf('none') < 0){
-              var map = new BMap.Map("mapContent");
-              var length = data.length;
-              map.enableScrollWheelZoom(true);
-              var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
-              for(var i =0;i<length;i++){
-                driving.search(new BMap.Point(data[0].longitude,data[0].latitude),new BMap.Point(data[length-1].longitude,data[length-1].latitude));
+          axios.post(this.ajaxUrl+"/pub/survey/v1/track",paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                for(let i in data){
+                  if(data[i].longitude === null){
+                    num++
+                  }
+                }
+                if(num == 0){
+                  $(".mapBox").toggleClass("hide");
+                  if($('.mapBox').attr('class').indexOf('none') < 0){
+                    var map = new BMap.Map("mapContent");
+                    var length = data.length;
+                    map.enableScrollWheelZoom(true);
+                    var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+                    for(var i =0;i<length;i++){
+                      driving.search(new BMap.Point(data[0].longitude,data[0].latitude),new BMap.Point(data[length-1].longitude,data[length-1].latitude));
+                    }
+                    driving.setSearchCompleteCallback(function() {
+                      //得到路线上的所有point
+                      data = driving.getResults().getPlan(0).getRoute(0).getPath();
+                      //画面移动到起点和终点的中间
+                      var centerPoint;
+                      centerPoint = new BMap.Point((data[0].longitude + data[data.length - 1].longitude) / 2, (data[0].latitude + data[data.length - 1].latitude) / 2);
+                      map.panTo(centerPoint);
+                      //连接所有点
+                      map.addOverlay(new BMap.Polyline(data, {strokeColor: "#f00", strokeWeight: 5, strokeOpacity: 1}));
+                    })
+                  }
+                }else{
+                  this.open4("暂无查勘员信息")
+                }
+              }else{
+                this.open4(response.data.resdes)
               }
-              driving.setSearchCompleteCallback(function() {
-                //得到路线上的所有point
-                data = driving.getResults().getPlan(0).getRoute(0).getPath();
-                //画面移动到起点和终点的中间
-                var centerPoint;
-                centerPoint = new BMap.Point((data[0].longitude + data[data.length - 1].longitude) / 2, (data[0].latitude + data[data.length - 1].latitude) / 2);
-                map.panTo(centerPoint);
-                //连接所有点
-                map.addOverlay(new BMap.Polyline(data, {strokeColor: "#f00", strokeWeight: 5, strokeOpacity: 1}));
-              })
-            }
-          }else{
-            this.open4("暂无查勘员信息")
-          }
-
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
         },
         downLoadCase(){
           var  surveyId = parseInt(this.surveyId)
