@@ -252,7 +252,7 @@
                     if(response.data.data.userfunctions[i].name == "机构管理"){
                       insititueName++;
                     }
-                    if(response.data.data.userfunctions[i].name == "机构管理"){
+                    if(response.data.data.userfunctions[i].name == "坐席管理"){
                       caseNum++;
                     }
                   }

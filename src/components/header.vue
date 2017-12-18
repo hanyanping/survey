@@ -301,6 +301,14 @@
                 <input class="creatInput"  :value="accidentaddress" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
                 <i class="el-icon-location" @click="openAdressDialog"></i>
               </div>
+              <!--<div class="addinsitituteInput">-->
+                <!--<span class="addinsitituteSpan">指派</span>-->
+                <!--<select class="creatInput" v-model="sign">-->
+                  <!--<option value="1" >坐席</option>-->
+                  <!--<option value="0">点我达</option>-->
+                  <!--<option value="2">顺丰</option>-->
+                <!--</select>-->
+              <!--</div>-->
               <div class="addinsitituteInput">
                 <span class="radio__inner" @click="checkRadio"></span>
                 <span style="margin-left:6px;">只派坐席</span>
@@ -357,8 +365,8 @@
           <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
             <el-tab-pane  label="机构管理" name="third">
             </el-tab-pane>
-            <el-tab-pane  label="查勘员管理" name="four">
-            </el-tab-pane>
+            <!--<el-tab-pane  label="查勘员管理" name="four">-->
+            <!--</el-tab-pane>-->
           </el-tabs>
         </div>
       </div>
@@ -394,6 +402,7 @@
         orgCode: "",
         surveyType: "1",
         mark: "1",
+        sign: "1",
         cityOption: [],
         companeyOption: [],
         orgOption: [],
@@ -580,9 +589,11 @@
             this.open4("请选择城市")
           }else if(this.orgCode == ""){
             this.open4("请选择处理机构")
-          }else if(this.surveyType == ""){
-            this.open4("请选择查勘类型")
-          }else if(this.accidentaddress == ""){
+          }
+//          else if(this.surveyType == ""){
+//            this.open4("请选择查勘类型")
+//          }
+          else if(this.accidentaddress == ""){
             this.open4("请输入事故地点")
           }else {
             var paramData = {
@@ -621,6 +632,7 @@
                     this.accidentaddress = "";
                     $(".radio__inner").addClass("isChecked");
                     this.mark = "1";
+                    this.sign = '1';
                     this.surveyType = '';
                     this.getCity = "京";
                     this.cityName = "";

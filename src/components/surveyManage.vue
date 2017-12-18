@@ -8,43 +8,43 @@
           <div class="clear scrollBox">
             <div class="surveyInfo">
               <div class="imgBox">
-               <img src="../images/kefuBlue.png"/>
+               <img :src="surveyInfo.auHeadIcon"/>
                 <span class="editorSurvey" @click="openEditor">
                   编辑
                 </span>
               </div>
-
               <div class="addinsitituteInput">
                 <span class="spanInfo">姓名:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail">{{surveyInfo.auUserName}}</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">电话:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail">{{surveyInfo.auPhone}}</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">职位:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail">{{surveyInfo.auPosition}}</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">编号:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail">{{surveyInfo.auJobnumber}}</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">所在城市:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail">{{surveyInfo.auCityName}}</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">所属公司:</span>
-                <span class="infoDetail">北京姑娘中看过接口接口坎坎坷坷方法</span>
+                <span class="infoDetail">{{surveyInfo.auCompanyName}}</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">账号状态:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail" v-if="surveyInfo.auIsLocked == 0">正常</span>
+                <span class="infoDetail" v-else>锁定</span>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">接单次数:</span>
-                <span class="infoDetail">kkjkjkkjkjkjkjjkjk</span>
+                <span class="infoDetail">{{orderTakeCount}}</span>
               </div>
             </div>
           </div>
@@ -55,16 +55,16 @@
       <div class="insititutListDialogBox">
         <span @click="closeSurvey" class="closinsititutMontor">×</span>
         <div class="oneMonitor clear">
-          <h4 class="dialogTitle">添加查勘员</h4>
+          <h4 class="dialogTitle adddialogTitle">添加查勘员</h4>
           <div class="clear scrollBox">
             <div style="margin-top:20px;">
               <div class="addinsitituteInput">
                 <span class="spanInfo">查勘员姓名</span>
-                <input type="text" :value="surveyor" class="inputBox"  placeholder="请输入查勘员姓名"/>
+                <input type="text" v-model="surveyor" class="inputBox"  placeholder="请输入查勘员姓名"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">查勘员手机号</span>
-                <input type="tel" :value="surveyorphone" class="inputBox"  maxlength="11" placeholder="请输入查勘员手机号"/>
+                <input type="tel" v-model="surveyorphone" class="inputBox"  maxlength="11" placeholder="请输入查勘员手机号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">头像</span>
@@ -73,33 +73,39 @@
                     <span style="color:#2EAB3B;" v-if="imgUrl ==''"> 上传</span>
                     <span  style="color:#2EAB3B;" v-else> 重新上传</span>
                     <input class="fileInput" type="file" @change="getFile($event)">
-                    <!--<button @click="submitForm($event)">提交</button>-->
                   </div>
                 </form>
                   <div v-if="imgUrl !=''" style="margin-left:10%;">
-                    <img  :src="imgUrl"/>
+                    <img style="height:85px;width:80px;" :src="imgUrl"/>
                   </div>
                   <div v-else style="margin-left:10%;">
-                    <img  src="../images/file.png"/>
+                    <img style="height:85px;width:80px;" src="../images/file.png"/>
                   </div>
               </div>
-              <!--<div class="addinsitituteInput">-->
-                <!--<span>所属城市</span>-->
-                <!--<select v-model="insurecode">-->
-                  <!--<option value="">请选择所属单位</option>-->
-                  <!--<option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>-->
-                <!--</select>-->
-              <!--</div>-->
+              <div class="addinsitituteInput">
+                <span class="spanInfo">所属省份</span>
+                <select v-model="insurecode" class="selectBox">
+                  <option value="">请选择所属省份</option>
+                  <option v-for="item in addprovincesOption" :value="item.id">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="addinsitituteInput">
+                <span class="spanInfo">所属城市</span>
+                <select v-model="citycode" class="selectBox">
+                  <option value="">请选择所属城市</option>
+                  <option v-for="item in addCityOPtion" :value="item.id">{{item.name}}</option>
+                </select>
+              </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">所属单位</span>
-                <select v-model="insurecode" class="selectBox">
+                <select v-model="compnaycode" class="selectBox">
                   <option value="">请选择所属单位</option>
-                  <option v-for="item in insurecodeOption" :value="item.code">{{item.name}}</option>
+                  <option v-for="item in addcompaneyOptions" :value="item.companyCode">{{item.companyName}}</option>
                 </select>
               </div>
               <div class="addinsitituteInput">
                 <span class="spanInfo">帐号状态</span>
-                <select v-model="islocked" class="selectBox">
+                <select v-model="isvalid" class="selectBox">
                   <option value="0">正常</option>
                   <option value="1">锁定</option>
                 </select>
@@ -125,7 +131,7 @@
           <span>手机号:</span>
           <input type="tel" v-model="phone" placeholder="请输入手机号" maxlength="11"/>
           <span>开通省份</span>
-          <el-select v-model="provinces" name="" placeholder="请选择省份">
+          <el-select v-model="provinces" name="" placeholder="请选择开通省份">
             <el-option
               v-for="item in provincesOption"
               :key="item.name"
@@ -133,10 +139,6 @@
               :value="item.id">
             </el-option>
           </el-select>
-          <!--<select v-model="provinces">-->
-            <!--<option value="">请选择开通省份</option>-->
-            <!--<option  v-for="item in provincesOption" :value="item.id">{{item.name}}</option>-->
-          <!--</select>-->
           <span>所属城市:</span>
           <el-select v-model="affiliateCityCode" name="" placeholder="请选择城市">
             <el-option
@@ -216,7 +218,7 @@
             <td style="width:160px;">{{item.joinTime}}</td>
             <td>{{item.accountStatu}}</td>
             <td>{{item.orderTakeCount}}</td>
-            <td ><span class="listView" @click="goSurveyDetail(item.id,item.surveyStatus)">查看</span></td>
+            <td ><span class="listView" @click="goSurveyDetail(item.userId,item.orderTakeCount)">查看</span></td>
           </tr>
           </tbody>
         </table>
@@ -245,6 +247,7 @@
   export default {
     data() {
       return {
+        headiconUrl:'',
         surveyor:'',
         surveyorphone:"",
         headicon:'',
@@ -252,9 +255,10 @@
         cityname:"",
         compnaycode:"",
         companyename:"",
-        isvalid:"",
+        isvalid:"0",
         addprovincesOption:[],
         addCityOPtion:[],
+        addcompaneyOptions:[],
         userchinaname:"",
         userphone:"",
         insurecode:"",
@@ -265,15 +269,12 @@
         tableActive: false,
         phone: "",
         surveyUserName: "",
-        affiliateCompanyCode: "",
         affiliateCityCode: '',
-        accidentStartTime:"",
-        accidentEndTime: "",
-        handleStartTime: "",
-        handleEndTime: "",
+        affiliateCompanyCode:"",
         insuranceCompanyCode: '',
-        accountStatus: '',
+        accountStatus: '0',
         pageSize: 10,
+        orderTakeCount:'',
         pages: '',
         imgUrl: '',
         surveyOption:[
@@ -293,25 +294,51 @@
         signSeatsActive: false,
         caseListActive: false,
         time: '',
-        file:''
+        file:'',
+        surveyInfo: {},
+        addActive: false,
+        number:0
       }
     },
     watch: {
+      "insurecode": function(){
+        if(this.number > 0){
+          if(this.insurecode != ''){
+            axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/"+this.insurecode+"/citys")
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.citycode = '';
+                  this.addCityOPtion = response.data.data;
+
+                }else{
+                  this.open4(response.data.resdes)
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
+        }
+      },
         "provinces": function(){
-          axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/"+this.provinces+"/citys")
-            .then(response => {
-              if(response.data.rescode == 200){
-                this.affiliateCityCode = '';
-                this.cityOptions = response.data.data;
-              }else{
-                this.open4(response.data.resdes)
-              }
-            }, err => {
-              console.log(err);
-            })
-            .catch((error) => {
-              console.log(error)
-            })
+          if(this.provinces != 0){
+            axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/"+this.provinces+"/citys")
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.affiliateCityCode = '';
+                  this.cityOptions = response.data.data;
+                }else{
+                  this.open4(response.data.resdes)
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
         },
       getUserIcons(val) {
         this.caseDetailActive = val;
@@ -336,7 +363,6 @@
       this.caseDetailActive = this.$store.state.caseDetailActive;
     },
     methods: {
-
         getFile(event) {
           this.file = event.target.files[0];
           console.log(this.file);
@@ -372,65 +398,153 @@
               console.log(error)
             })
         },
-      submitForm(event) {
+        addSurvey(){
+          if(this.surveyor == ''){
+            this.open4("请输入查勘员姓名")
+          }else if(this.surveyorphone == ''){
+            this.open4("请输入查勘员手机号")
+          }else if(this.imgUrl == ''){
+            this.open4("请上传头像")
+          }else if(this.insurecode == ''){
+            this.open4("请选择省份")
+          }else if(this.citycode == ''){
+            this.open4("请选择城市")
+          }else if(this.compnaycode == ''){
+            this.open4("请选择所在单位")
+          }else{
+            for(let i in this.addCityOPtion){
+              if(this.citycode == this.addCityOPtion[i].id){
+                var cityname = this.addCityOPtion[i].name;
+              }
+            }
+            for(let i in this.addcompaneyOptions){
+              if(this.compnaycode == this.addcompaneyOptions[i].companyCode){
+                var companyename = this.addcompaneyOptions[i].companyName;
+              }
+            }
+            if(this.addActive){
+              var paramData = {
+                "surveyor": this.surveyor,
+                "surveyorphone": this.surveyorphone,
+                "headicon": this.imgUrl,
+                "citycode": this.citycode,
+                "cityname": cityname,
+                "companycode": this.compnaycode,
+                "companyname": companyename,
+                "isvalid": this.isvalid
+              };
+              var url = '/pubsurvey/surveyor/v1/user/surveyoradd'
+            }else{
+              var paramData = {
+                "accesstoken": this.surveyInfo.auUserId,
+                "surveyor": this.surveyor,
+                "surveyorphone": this.surveyorphone,
+                "headicon": this.imgUrl,
+                "citycode": this.citycode,
+                "cityname": cityname,
+                "companycode": this.compnaycode,
+                "companyname": companyename,
+                "isvalid": this.isvalid
+              };
+              var url = '/pubsurvey/surveyor/v1/user/surveyorupdate';
+            }
+            axios.post(this.ajaxUrl+ url,paramData)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.open2(response.data.resdes)
+                  this.surveyor = '';
+                  this.surveyorphone = '';
+                  this.imgUrl = '';
+                  this.citycode = '';
+                  this.compnaycode = '';
+                  this.isvalid = '0'
+                  this.insurecode = '';
+                  this.addCityOPtion = [];
+                  this.addcompaneyOptions = [];
+                  this.addprovincesOption = [];
+                  $(".surveyDialog").addClass("hide");
+                  $(".adddialogTitle").html("添加查勘员");
+                  $(".insititutListDialog ").addClass("hide");
+                  this.addActive = false;
+                  this.number = '0';
+                  this.getCaseList()
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
 
-
-
-
-
-      },
-      addSurvey(){
-        var param = new FormData();
-        param.append('file',document.getElementById('form1'));
-
-        var config = {
-          headers:{'Content-Type': 'multipart/form-data',
-           }
-        };
-        console.log(param.get('file'))
-        axios({
-          method: 'post',
-          url: this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          data: param
-        }).then(response => {
-
-        })
-//        axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/image/upload/survior/image",param,config)
-//          .then(response => {
-//            if(response.data.rescode == 200){
-//
-//            }else{
-//              if(response.data.rescode == 215){
-//                this.open2(response.data.resdes)
-//              }else if(response.data.rescode == 300){
-//                this.$router.push({path:'/'})
-//              }else{
-//                this.open4(response.data.resdes)
-//              }
-//            }
-//          }, err => {
-//            console.log(err);
-//          })
-//          .catch((error) => {
-//            console.log(error)
-//          })
-      },
+       },
 
       openSurvey(){
         $(".surveyDialog").removeClass("hide");
-        this.getProvince()
+        $(".adddialogTitle").html("添加查勘员");
+        this.addActive = true;
+        this.getProvince();
+        this.number = 1;
       },
       openEditor(){
         $(".surveyDialog").removeClass("hide");
+        this.addActive = false;
+        $(".adddialogTitle").html("编辑查勘员信息")
+        this.surveyor = this.surveyInfo.auUserName;
+        this.surveyorphone = this.surveyInfo.auPhone;
+        this.imgUrl = this.surveyInfo.auHeadIcon;
+        this.getProvince();
+        this.number = 0;
       },
       getProvince(){
+        axios.get(this.ajaxUrl+"/pubsurvey/surveyor/v1/user/affiliate/company")
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.addcompaneyOptions = response.data.data;
+              if(this.addActive == false){
+                this.compnaycode = this.surveyInfo.auCompanyCode;
+              }
+            }else{
+              this.open4(response.data.resdes)
+              if(response.data.rescode == 300){
+                this.$router.push({path:'/'})
+              }
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
         axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/provinceinsure")
           .then(response => {
             if(response.data.rescode == 200){
-              this.addprovincesOption = response.data.data.provinces
+              this.addprovincesOption = response.data.data.provinces;
+              if(this.addActive == false){
+                this.insurecode = this.surveyInfo.auCityCode.substring(0,2);
+
+                console.log(this.insurecode);
+                axios.get(this.ajaxUrl+"/pubsurvey/manage/department/v1/"+this.insurecode+"/citys")
+                  .then(response => {
+                    if(response.data.rescode == 200){
+                      this.addCityOPtion = response.data.data;
+                      this.citycode = this.surveyInfo.auCityCode;
+                      this.number = 1;
+                    }else{
+                      this.open4(response.data.resdes)
+                    }
+                  }, err => {
+                    console.log(err);
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  })
+              }
             }else{
               this.open4(response.data.resdes)
             }
@@ -446,6 +560,8 @@
       },
       closeSurvey(){
         $(".surveyDialog").addClass("hide");
+        this.addActive = false;
+        $(".adddialogTitle").html("添加查勘员")
       },
       open4(resdes) {
         this.$message.error(resdes);
@@ -479,7 +595,7 @@
           })
       },
       getCompaney(){
-        axios.get(this.ajaxUrl+"/surveyoruser/affiliate/company")
+        axios.get(this.ajaxUrl+"/pubsurvey/surveyor/v1/user/affiliate/company")
           .then(response => {
             if(response.data.rescode == 200){
               this.companeyOptions = response.data.data;
@@ -520,7 +636,7 @@
           "affiliateCityCode": this.affiliateCityCode,
           "accountStatus":this.accountStatus
         }
-        axios.post(this.ajaxUrl+"/surveyoruser/surveyors",paramData)
+        axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/user/surveyors",paramData)
           .then(response => {
             if(response.data.rescode == 200){
               this.tableData = response.data.data.records;
@@ -574,31 +690,27 @@
         this.page = currentPage;
         this.getCaseList()
       },
-      goSurveyDetail(id,orderStatus){
+      goSurveyDetail(accesstoken,acceptordernum){
+        this.orderTakeCount = acceptordernum;
         $(".insititutListDialog ").removeClass("hide");
-//        var paramData = {
-//          "id": parseInt(id),
-//          "orderStatus": orderStatus
-//        }
-//        axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
-//          .then(response => {
-//            if(response.data.rescode == 200){
-//              var data = JSON.stringify(response.data.data)
-//              localStorage.setItem("caseDetailData",data);
-//              this.$store.commit('setCaseDetailActive', true);
-//              this.caseDetailActive = this.$store.state.caseDetailActive;
-//            }
-//          }, err => {
-//            console.log(err);
-//          })
-//          .catch((error) => {
-//            console.log(error)
-//          })
+        var paramData = {
+          "accesstoken":accesstoken,
+          "acceptordernum": acceptordernum
+        }
+        axios.post(this.ajaxUrl+"/pubsurvey/surveyor/v1/user/surveyorinfo",paramData)
+          .then(response => {
+            if(response.data.rescode == 200){
+             this.surveyInfo = response.data.data;
+            }else{
+              this.open4(response.data.resdes)
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
-    },
-    components: {
-      caseDetail,
-      signSeats,
     },
     computed: {
       getUserIcons(){
@@ -612,7 +724,7 @@
       }
     },
     destroyed () {
-      clearInterval(this.time);
+
     },
   }
 
@@ -661,7 +773,7 @@
     margin: 8vh auto;
     background: #fff;
     padding: 20px;
-    max-height: 70vh;
+    max-height: 77vh;
     position: relative;
   }
   .insititutListDialog .dialogTitle,.surveyDialog .dialogTitle{
@@ -691,8 +803,8 @@
     padding-bottom: 5px;
   }
   .imgBox img{
-    height: 68px;
-    width: 68px;
+    height: 85px;
+    width: 80px;
     margin:0 auto;
   }
   .imgBox{

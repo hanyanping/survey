@@ -78,10 +78,10 @@
     border: 1px dashed #DCDCDC;
     background: #F8F8F9;
   }
-.carInfoBoxOne{
-  background: #fff;
-  width: 24%;
-}
+  .carInfoBoxOne{
+    background: #fff;
+    width: 24%;
+  }
   .carInfoBox p{
     line-height: 25px;
     font-weight: normal;
@@ -135,7 +135,7 @@
           <h4 class="dialogTitle">案件监控</h4>
           <p class="titleInfo">当日坐席超过2次30s内未接听视频的</p>
           <div class="clear scrollBox">
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGreen" v-if="item.currentStatusAuto ==0 && item.currentStatusManual  == 0">
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGreen" v-if="item.currentStatusAuto  ==0 && item.currentStatusManual == 0">
               <div class="imgBox">
                 <img src="../images/kefuBlue.png">
                 <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
@@ -146,7 +146,7 @@
               <p class="carInfoOne">今日登陆时间：{{item.todayLoginTime}}</p>
               <p class="carInfoOne orderTime">今日30s内未接听次数：{{item.todayWithinThirtySecondsNotAnswerCount}}次</p>
             </div>
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorRed" v-if="item.currentStatusAuto == 2 || item.currentStatusManual  == 2">
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorRed" v-if="item.currentStatusAuto == 2 || item.currentStatusManual == 2">
               <div class="imgBox">
                 <img src="../images/kefuBlue.png">
                 <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
@@ -157,8 +157,7 @@
               <p class="carInfoOne">今日登陆时间：{{item.todayLoginTime}}</p>
               <p class="carInfoOne orderTime">今日30s内未接听次数：{{item.todayWithinThirtySecondsNotAnswerCount}}次</p>
             </div>
-
-            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGray" v-if="(item.currentStatusAuto == 1 || item.currentStatusAuto == null) && (item.currentStatusManual == 1 || item.currentStatusManual == null)">
+            <div v-for="item in caseMonitor" class="left carInfoBoxOne bordercolorGray" v-if="((item.currentStatusAuto  == 1 || item.currentStatusAuto == null)&&(item.currentStatusManual!=2))">
               <div class="imgBox">
                 <img src="../images/kefuBlue.png">
                 <h3 class="kefuName">{{item.backstageSurveyorName }}</h3>
@@ -220,53 +219,53 @@
     <case-detail v-if="caseDetailActive"></case-detail>
     <sign-Seats v-if="signSeatsActive"></sign-Seats>
 
-  <div class="caseMontor">
-    <div class="caseMontorBox">
-      <div class="caseMinute" style="background:#ECF5FF;border-color:#ABD5FF;"  @click="goCase(caseNuber.one)">
-        <h3 class="minuteNuber" style="color:#46A0FC">{{todayNotAssignedMoreThanTwoMinutesCount}}</h3>
-        <p class="minuterdetail">当日超过2分钟未分派查勘员</p>
+    <div class="caseMontor">
+      <div class="caseMontorBox">
+        <div class="caseMinute" style="background:#ECF5FF;border-color:#ABD5FF;"  @click="goCase(caseNuber.one)">
+          <h3 class="minuteNuber" style="color:#46A0FC">{{todayNotAssignedMoreThanTwoMinutesCount}}</h3>
+          <p class="minuterdetail">当日超过2分钟未分派查勘员</p>
+        </div>
+        <div class="caseMinute" style="background:#F0F9EB;border-color:#AADA95;" @click="goCase(caseNuber.two)">
+          <h3 class="minuteNuber" style="color:#6AC044">{{todaySceneSurveyorExpectTimeNonArrivalCount}}</h3>
+          <p class="minuterdetail">当日现场查勘员预计到达时间未到达的</p>
+        </div>
+        <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;" @click="goCase(caseNuber.three)">
+          <h3 class="minuteNuber"  style="color:#F79E14;">{{todaySceneSurveyorArrivedMoreThanFiveMinutesNoVideoRequestCount}}</h3>
+          <p class="minuterdetail">当日现场查勘员到达现场超过5分钟未发起视频请求</p>
+        </div>
+        <div class="caseMinute" style="background:#FFEEEE;border-color:#FCBCBD;" @click="goCase(caseNuber.foure)">
+          <h3 class="minuteNuber" style="color:#F75759;">{{todaySceneSurveyorVideoRequestMoreThanThreeTimesNotConnectedCount}}</h3>
+          <p class="minuterdetail">现场查勘员发起视频请求超过3次未连接的</p>
+        </div>
       </div>
-      <div class="caseMinute" style="background:#F0F9EB;border-color:#AADA95;" @click="goCase(caseNuber.two)">
-        <h3 class="minuteNuber" style="color:#6AC044">{{todaySceneSurveyorExpectTimeNonArrivalCount}}</h3>
-        <p class="minuterdetail">当日现场查勘员预计到达时间未到达的</p>
-      </div>
-      <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;" @click="goCase(caseNuber.three)">
-        <h3 class="minuteNuber"  style="color:#F79E14;">{{todaySceneSurveyorArrivedMoreThanFiveMinutesNoVideoRequestCount}}</h3>
-         <p class="minuterdetail">当日现场查勘员到达现场超过5分钟未发起视频请求</p>
-      </div>
-      <div class="caseMinute" style="background:#FFEEEE;border-color:#FCBCBD;" @click="goCase(caseNuber.foure)">
-        <h3 class="minuteNuber" style="color:#F75759;">{{todaySceneSurveyorVideoRequestMoreThanThreeTimesNotConnectedCount}}</h3>
-        <p class="minuterdetail">现场查勘员发起视频请求超过3次未连接的</p>
-      </div>
-    </div>
-    <div class="caseMontorBox">
-      <div class="caseMinute" style="background:#F0F9EB;border-color:#AADA95;"  @click="goCase(caseNuber.five)">
-        <h3 class="minuteNuber" style="color:#6AC044;">{{todayMoreThanTwoTimesWithinThirtySecondsNotAnswerCount}}</h3>
-        <p class="minuterdetail">当日坐席超过2次30s内未接听视频的</p>
-      </div>
-      <div class="caseMinute" style="background:#FFEEEE;border-color:#FCBCBD;" @click="goCase(caseNuber.six)">
-        <h3 class="minuteNuber" style="color:#F75759;"> {{todaySurveyTimeMoreThanTwentyMinutesNotCompletedCount}}</h3>
-        <p class="minuterdetail">当前订单处理时间超过20分钟未查勘完成的</p>
-      </div>
-      <div class="caseMinute" style="background:#ECF5FF;border-color:#ABD5FF;" @click="goCase(caseNuber.seven)">
-        <h3 class="minuteNuber" style="color:#46A0FC;">{{todayCompletedOfExceptionCount}}</h3>
-        <p class="minuterdetail">当日异常查勘完成的案件</p>
+      <div class="caseMontorBox">
+        <div class="caseMinute" style="background:#F0F9EB;border-color:#AADA95;"  @click="goCase(caseNuber.five)">
+          <h3 class="minuteNuber" style="color:#6AC044;">{{todayMoreThanTwoTimesWithinThirtySecondsNotAnswerCount}}</h3>
+          <p class="minuterdetail">当日坐席超过2次30s内未接听视频的</p>
+        </div>
+        <div class="caseMinute" style="background:#FFEEEE;border-color:#FCBCBD;" @click="goCase(caseNuber.six)">
+          <h3 class="minuteNuber" style="color:#F75759;"> {{todaySurveyTimeMoreThanTwentyMinutesNotCompletedCount}}</h3>
+          <p class="minuterdetail">当前订单处理时间超过20分钟未查勘完成的</p>
+        </div>
+        <div class="caseMinute" style="background:#ECF5FF;border-color:#ABD5FF;" @click="goCase(caseNuber.seven)">
+          <h3 class="minuteNuber" style="color:#46A0FC;">{{todayCompletedOfExceptionCount}}</h3>
+          <p class="minuterdetail">当日异常查勘完成的案件</p>
+        </div>
+
+        <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;" @click="goCase(caseNuber.eight)">
+          <h3 class="minuteNuber" style="color:#F79E14;">{{todayWaitAllocatBackstageSurveyorCount}}</h3>
+          <p class="minuterdetail">待分配后台坐席订单数</p>
+        </div>
       </div>
 
-      <div class="caseMinute" style="background:#FDF5E7;border-color:#FDDBA7;" @click="goCase(caseNuber.eight)">
-        <h3 class="minuteNuber" style="color:#F79E14;">{{todayWaitAllocatBackstageSurveyorCount}}</h3>
-        <p class="minuterdetail">待分配后台坐席订单数</p>
-      </div>
     </div>
-
-  </div>
 
   </div>
 </template>
 <script>
-import caseDetail from '../components/caseDetail'
-import signSeats from '../components/signSeats'
-import axios from 'axios'
+  import caseDetail from '../components/caseDetail'
+  import signSeats from '../components/signSeats'
+  import axios from 'axios'
   export default {
     data() {
       return{
@@ -376,7 +375,7 @@ import axios from 'axios'
           .catch((error) => {
             console.log(error)
           })
-    },
+      },
       goCase(item){//进入案件列表
 
         var url = '';
@@ -507,31 +506,31 @@ import axios from 'axios'
                 console.log(error)
               })
             break;
-            case "6":
-              url = '/monitor/v1/not-completed';
-              axios.get(this.ajaxUrl+url)
-                .then(response => {
-                  if(response.data.rescode == 200){
-                    this.caseMonitor = response.data.data;
-                    if(this.caseMonitor.length == 0){
-                      this.open2("暂无数据")
-                    }else{
-                      $(".caseMontorDialog").removeClass("hide");
-                      this.caseActive.sixcase = true;
-                    }
+          case "6":
+            url = '/monitor/v1/not-completed';
+            axios.get(this.ajaxUrl+url)
+              .then(response => {
+                if(response.data.rescode == 200){
+                  this.caseMonitor = response.data.data;
+                  if(this.caseMonitor.length == 0){
+                    this.open2("暂无数据")
                   }else{
-                    this.open4(response.data.resdes)
-                    if(response.data.rescode == 300){
-                      this.$router.push({path:'/'})
-                    }
+                    $(".caseMontorDialog").removeClass("hide");
+                    this.caseActive.sixcase = true;
                   }
-                }, err => {
-                  console.log(err);
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-              break;
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+            break;
           case "7":
             url = '/monitor/v1/exception-completed';
             axios.get(this.ajaxUrl+url)
@@ -612,11 +611,11 @@ import axios from 'axios'
         this.getCaseMonitor()
       },
       goCaseDetail(id,surveyStatus){//查看案件详情
-         var paramData = {
-              "id": parseInt(id),
-              "orderStatus": surveyStatus
-          }
-          axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
+        var paramData = {
+          "id": parseInt(id),
+          "orderStatus": surveyStatus
+        }
+        axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
           .then(response => {
             if(response.data.rescode == 200){
               var data = JSON.stringify(response.data.data)

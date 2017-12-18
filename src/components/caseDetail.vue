@@ -21,6 +21,7 @@
     position: absolute;
     right: 15px;
     top: 0;
+    cursor: pointer;
   }
   .detailContent{
     overflow-y: scroll;
@@ -150,6 +151,7 @@
     background: #2EAB3B;
     line-height: 35px;
     text-align: center;
+    cursor: pointer;
 
   }
 </style>
@@ -493,6 +495,7 @@ export default {
         mapRouter(){
           var data = this.coordinates;
           var num = 0;
+
           for(let i in data){
             if(data[i].longitude === null){
               num++
@@ -522,6 +525,7 @@ export default {
           }else{
             this.open4("暂无查勘员信息")
           }
+
         },
         downLoadCase(){
           var  surveyId = parseInt(this.surveyId)

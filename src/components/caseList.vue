@@ -116,7 +116,7 @@
           <td>{{item.accidentAddress}}</td>
           <td>{{item.survey}}</td>
           <td>{{item.videoConnectRequestCount}}</td>
-          <td ><span v-if="item.webAllot == '0'" class="listAssign" @click="signSeats(item.id)" >指派</span><i v-if="item.webAllot == '0'">|</i><span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
+          <td ><span v-if="item.webAllot == '0' && item.surveyStatus != '08'" class="listAssign" @click="signSeats(item.id)" >指派</span><i v-if="item.webAllot == '0'&& item.surveyStatus != '08'">|</i><span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
         </tr>
         </tbody>
       </table>
@@ -401,10 +401,13 @@
             axios.post(this.ajaxUrl+"/survey-detail/v1/get",paramData)
               .then(response => {
                 if(response.data.rescode == 200){
-                  var data = JSON.stringify(response.data.data)
-                  localStorage.setItem("caseDetailData",data);
-                  this.$store.commit('setCaseDetailActive', true);
-                  this.caseDetailActive = this.$store.state.caseDetailActive;
+                  console.log(response.data.data)
+                  if(response.data.data != null){
+                    var data = JSON.stringify(response.data.data)
+                    localStorage.setItem("caseDetailData",data);
+                    this.$store.commit('setCaseDetailActive', true);
+                    this.caseDetailActive = this.$store.state.caseDetailActive;
+                  }
                 }
               }, err => {
                 console.log(err);
