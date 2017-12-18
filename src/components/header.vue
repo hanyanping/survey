@@ -589,10 +589,9 @@
             this.open4("请选择城市")
           }else if(this.orgCode == ""){
             this.open4("请选择处理机构")
+          }else if(this.surveyType == ""){
+            this.open4("请选择查勘类型")
           }
-//          else if(this.surveyType == ""){
-//            this.open4("请选择查勘类型")
-//          }
           else if(this.accidentaddress == ""){
             this.open4("请输入事故地点")
           }else {
@@ -633,7 +632,7 @@
                     $(".radio__inner").addClass("isChecked");
                     this.mark = "1";
                     this.sign = '1';
-                    this.surveyType = '';
+                    this.surveyType = '1';
                     this.getCity = "京";
                     this.cityName = "";
                     this.open2("创建成功");
