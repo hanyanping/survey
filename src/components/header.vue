@@ -365,8 +365,8 @@
           <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
             <el-tab-pane  label="机构管理" name="third">
             </el-tab-pane>
-            <!--<el-tab-pane  label="查勘员管理" name="four">-->
-            <!--</el-tab-pane>-->
+            <el-tab-pane  label="查勘员管理" name="four">
+            </el-tab-pane>
           </el-tabs>
         </div>
       </div>
