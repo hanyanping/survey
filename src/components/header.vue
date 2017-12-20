@@ -301,18 +301,18 @@
                 <input class="creatInput"  :value="accidentaddress" type="text" readonly @click="openAdressDialog" placeholder="请输入事故地点"/>
                 <i class="el-icon-location" @click="openAdressDialog"></i>
               </div>
-              <!--<div class="addinsitituteInput">-->
-                <!--<span class="addinsitituteSpan">指派</span>-->
-                <!--<select class="creatInput" v-model="sign">-->
-                  <!--<option value="1" >坐席</option>-->
-                  <!--<option value="0">点我达</option>-->
-                  <!--<option value="2">顺丰</option>-->
-                <!--</select>-->
-              <!--</div>-->
               <div class="addinsitituteInput">
-                <span class="radio__inner" @click="checkRadio"></span>
-                <span style="margin-left:6px;">只派坐席</span>
+                <span class="addinsitituteSpan">指派</span>
+                <select class="creatInput" v-model="sign">
+                  <option value="1" >坐席</option>
+                  <option value="0">点我达</option>
+                  <option value="2">顺丰</option>
+                </select>
               </div>
+              <!--<div class="addinsitituteInput">-->
+                <!--<span class="radio__inner" @click="checkRadio"></span>-->
+                <!--<span style="margin-left:6px;">只派坐席</span>-->
+              <!--</div>-->
               <div class="addinsitituteInput">
                 <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
               </div>
@@ -610,7 +610,7 @@
               "accidentaddress": this.accidentaddress,
               "lng": this.lng,
               "lat": this.lat,
-              "mark": this.mark,
+              "mark": this.sign,
             }
             axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
               .then(response => {
