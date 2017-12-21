@@ -381,7 +381,9 @@
             .then(response => {
               console.log(response.status)
               if(response.status == 200){
+                $('.addinsitituteInput').find('form')[0].reset();
                 this.imgUrl = response.data;
+                console.log(this.imgUrl)
               }else{
                 if(response.data.rescode == 215){
                   this.open2(response.data.resdes)
