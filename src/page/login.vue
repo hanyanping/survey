@@ -20,18 +20,18 @@
     height: 40px;
     width: 115px;
   }
-.loginContent{
-  height:100vh;
-  background: #fff;
-  width: 100%;
-  padding: 20px 15%;
+  .loginContent{
+    height:100vh;
+    background: #fff;
+    width: 100%;
+    padding: 20px 15%;
 
-}
-.loginLeft{
-  background: url("../images/login.png") center 20px no-repeat;
-  width: 50%;
-  height: 400px;
-}
+  }
+  .loginLeft{
+    background: url("../images/login.png") center 20px no-repeat;
+    width: 50%;
+    height: 400px;
+  }
   .loginRight{
     margin: 80px 15px 0 15px;
     height: 400px;
@@ -51,7 +51,7 @@
     width: 260px;
   }
   .loginRight .codeInput{
-      width: 146px;
+    width: 146px;
   }
   .loginInput>i {
     position: absolute;
@@ -80,22 +80,22 @@
     height: 40px;
     line-height: 40px;
   }
-.footerText{
-  text-align: center;
-  color:#bbb;
-}
+  .footerText{
+    text-align: center;
+    color:#bbb;
+  }
   /*.el-icon-refresh{*/
 
-    /*transition: All 0.4s ease-in-out;*/
-    /*-webkit-transition: All 0.4s ease-in-out;*/
-    /*-moz-transition: All 0.4s ease-in-out;*/
-    /*-o-transition: All 0.4s ease-in-out;*/
+  /*transition: All 0.4s ease-in-out;*/
+  /*-webkit-transition: All 0.4s ease-in-out;*/
+  /*-moz-transition: All 0.4s ease-in-out;*/
+  /*-o-transition: All 0.4s ease-in-out;*/
   /*}*/
   /*.el-icon-refresh:hover{*/
-    /*transition: All 0.4s ease-in-out;*/
-    /*-webkit-transition: All 0.4s ease-in-out;*/
-    /*-moz-transition: All 0.4s ease-in-out;*/
-    /*-o-transition: All 0.4s ease-in-out;*/
+  /*transition: All 0.4s ease-in-out;*/
+  /*-webkit-transition: All 0.4s ease-in-out;*/
+  /*-moz-transition: All 0.4s ease-in-out;*/
+  /*-o-transition: All 0.4s ease-in-out;*/
   /*}*/
   .rotateBox {
     position: absolute;
@@ -155,7 +155,7 @@
       </div>
       <div class="footerText"> 北京中车宝联科技有限责任公司 ©2015-2018</div>
     </div>
-    </div>
+  </div>
 </template>
 
 <script>
@@ -241,25 +241,34 @@
         }else{
           axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/login",paramData)
             .then(response => {
-                if(response.data.rescode == 200){
-                  this.open2();
-                  var setHeaderActive;
-                  localStorage.setItem('chinaName',response.data.data.user.chinaName)
-                  localStorage.setItem('userName',response.data.data.user.userName)
-                  localStorage.setItem('orgcode',response.data.data.user.orgcode)
-                  if(response.data.data.userfunctions.length == 1){
-                    setHeaderActive = false
-                    localStorage.setItem('setHeaderActive',setHeaderActive)
-                  }else{
-                    setHeaderActive = true
-                    localStorage.setItem('setHeaderActive',setHeaderActive)
+              if(response.data.rescode == 200){
+                this.open2();
+                var setHeaderActive;
+                localStorage.setItem('chinaName',response.data.data.user.chinaName)
+                localStorage.setItem('userName',response.data.data.user.userName)
+                localStorage.setItem('orgcode',response.data.data.user.orgcode);
+                var insititueName = 0,caseNum = 0;
+                for(let i in response.data.data.userfunctions){
+                  if(response.data.data.userfunctions[i].name == "机构管理"){
+                    insititueName++;
                   }
-                  this.$router.push({path:'/surveyContant'})
-                }else {
-                  this.open4(response.data.resdes);
-                  this.getCode()
-                  this.valicode = '';
+                  if(response.data.data.userfunctions[i].name == "坐席管理"){
+                    caseNum++;
+                  }
                 }
+                if(insititueName != 0 && caseNum ==0){
+                  setHeaderActive = false
+                  localStorage.setItem('setHeaderActive',setHeaderActive)
+                }else if(insititueName == 0 && caseNum !=0){
+                  setHeaderActive = true
+                  localStorage.setItem('setHeaderActive',setHeaderActive)
+                }
+                this.$router.push({path:'/surveyContant'})
+              }else {
+                this.open4(response.data.resdes);
+                this.getCode()
+                this.valicode = '';
+              }
             }, err => {
               console.log(err);
             })
