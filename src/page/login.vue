@@ -165,7 +165,6 @@
   export default {
     data() {
       return {
-        ajaxUrl: "/boot-pub-survey-manage",
         imgUrl: '',
         username: "",
         valicode: "",

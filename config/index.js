@@ -16,7 +16,6 @@ module.exports = {
         // target: 'http://192.168.1.18:8080',//元鹏
         target: 'https://chakan.zhongchebaolian.com', // 生产
         // target: 'https://survey.zhongchebaolian.com', // 测试
-
         changeOrigin: true,
         pathRewrite: {
           '^/boot-pub-survey-manage': '/boot-pub-survey-manage'

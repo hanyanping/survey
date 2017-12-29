@@ -314,7 +314,6 @@
         editorActive: false,
         seatsList: [],
         seatInfo: [],
-        ajaxUrl: "/boot-pub-survey-manage",
         caseDetailActive: false,
       }
     },

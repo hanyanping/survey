@@ -12,9 +12,9 @@
         <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
           <el-option
             v-for="item in companeyOptions"
-            :key="item.insureCompanyName"
-            :label="item.insureCompanyName"
-            :value="item.insureCompanyCode">
+            :key="item.code"
+            :label="item.name"
+            :value="item.code">
           </el-option>
         </el-select>
 
@@ -22,9 +22,9 @@
         <el-select v-model="orgCode" name="insititution" placeholder="请选择机构">
           <el-option
             v-for="item in organizations"
-            :key="item.orgCode"
-            :label="item.orgName"
-            :value="item.orgCode">
+            :key="item.code"
+            :label="item.name"
+            :value="item.code">
           </el-option>
         </el-select>
         <span >案件状态:</span>
@@ -62,13 +62,15 @@
         <input class="smInp" name="dealendDate" v-model="handleEndTime" style="margin-left: 5px;" type="hidden" id="dealendTime" readonly="readonly" placeholder="结束时间"/>
         <span class="caseListSure" @click="formSure">确定 </span>
         <span class="caseListReset" @click="resetData">重置</span>
+
       </form>
     </div>
     <div class="caseListTable" v-if="tableActive">
-      <div class="tableTitle">
-        <span>共: {{pages}}页,</span>
+      <div class="tableTitle" style="height: 35px;">
+        <span style="line-height: 35px;">共: {{pages}}页,</span>
         <span>{{totalCount}}条, </span>
         <span>当前页: {{currentCount}}条</span>
+        <span class="caseListReset right" style="margin-right: 4%;display:none;" @click="downloadList">案件信息下载</span>
       </div>
       <table class="table" border="0" cellspacing="0" cellpadding="0" style="border-top: 1px solid #bbb;">
         <thead>
@@ -264,16 +266,22 @@
             })
         },
         getCompaney(){
-          axios.get(this.ajaxUrl+"/pub/survey/v1/insure-company")
+          var paramData = {
+            "action": "detail"
+          }
+          axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
             .then(response => {
               if(response.data.rescode == 200){
-                this.companeyOptions = response.data.data.insureCompanys;
-                this.organizations = response.data.data.organizations;
+                console.log(response.data.data.company)
+                this.companeyOptions = response.data.data.company ;
+
+                this.organizations= response.data.data.org;
+
               }else{
-                this.open4(response.data.resdes)
-                if(response.data.rescode == 300){
-                  this.$router.push({path:'/'})
+                if(response.data.rescode == "300"){
+                  this.$router.push({path:"/login"})
                 }
+                this.open4(response.data.resdes);
               }
             }, err => {
               console.log(err);
@@ -365,6 +373,39 @@
               console.log(error)
             })
         },
+        downloadList(){
+          if(this.value6){
+            for(let i in this.value6){
+              if(i == 0){
+                this.accidentStartTime = new Date(this.value6[0]);
+              }else if(i == 1){
+                this.accidentEndTime = new Date(this.value6[1])
+                this.accidentEndTime = new Date(this.accidentEndTime.getTime()+24*60*60*1000-1);
+              }
+            }
+            this.accidentStartTime = this.accidentStartTime.getFullYear() + '-' + (this.accidentStartTime.getMonth() + 1) + '-' + this.accidentStartTime.getDate()+ " 00:00:00";
+            this.accidentEndTime = this.accidentEndTime.getFullYear() + '-' + (this.accidentEndTime.getMonth() + 1) + '-' + this.accidentEndTime.getDate()+" "+ this.accidentEndTime.getHours() + ":" + this.accidentEndTime.getMinutes() + ":" + this.accidentEndTime.getSeconds();
+          }else{
+            this.accidentStartTime = "";
+            this.accidentEndTime = "";
+          }
+          if(this.value7){
+            for(let i in this.value7){
+              if(i == 0){
+                this.handleStartTime = new Date(this.value6[0]);
+              }else if(i == 1){
+                this.handleEndTime = new Date(this.value6[1])
+                this.handleEndTime =  new Date(this.handleEndTime.getTime()+24*60*60*1000-1)
+              }
+            }
+            this.handleStartTime = this.handleStartTime.getFullYear() + '-' + (this.handleStartTime.getMonth() + 1) + '-' + this.handleStartTime.getDate()+ " " + this.handleStartTime.getHours() + ":" + this.handleStartTime.getMinutes() + ":" + this.handleStartTime.getSeconds();
+            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ "" + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
+          }else{
+            this.handleStartTime = "";
+            this.handleEndTime = "";
+          }
+          window.open(this.ajaxUrl+"/pub/survey/v1/exportexcel?insuranceCompanyCode="+this.insuranceCompanyCode+"&orgCode="+this.orgCode+"&reporterCarLicenseNo="+this.reporterCarLicenseNo+"&reportInsuranceNo="+this.reportInsuranceNo+"&reporterPhoneNo="+this.reporterPhoneNo+"&surveyStatus="+this.surveyStatus+"&accidentStartTime="+this.accidentStartTime+"&accidentEndTime="+this.accidentEndTime+"&handleStartTime="+this.handleStartTime+"&handleEndTime="+this.handleEndTime)
+        },
         handleClick(row) {
           console.log(row);
         },
@@ -386,6 +427,7 @@
           this.value7 = "";
           this.getCaseList()
         },
+
         handleCurrentChange(currentPage) {//跳转
           //当前页改变调用接口  pageNo  pageSize
           this.currentPageNo = currentPage;

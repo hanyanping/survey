@@ -437,16 +437,26 @@ export default {
                       })
                     })
                   }else{
+
                     var thirdLength = this.accidentVehicleInfos.length;
                     for(let i in this.accidentVehicleInfos){
                         if(i == source){
-                          this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records);
+                          for(let j in response.data.data.records){
+                            this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records[j])
+                          }
                           this.accidentVehicleInfos[i].total = response.data.data.total;
                           this.accidentVehicleInfos[i].pageNum = response.data.data.pageNum;
                         }
                     }
                       this.$nextTick(() => {
                         this.thirdCar = this.accidentVehicleInfos;
+                        console.log(this.thirdCar)
+                        for(let i in this.thirdCar)
+                        {
+for(let j in this.thirdCar[i].thirdCarImg){
+  console.log(this.thirdCar[i].thirdCarImg[j].photoTypeComment)
+}
+                        }
                         for (let i in this.thirdCar) {
                           this.$nextTick(() => {
                             new Viewer(document.getElementsByClassName('suibian')[i], {
@@ -529,7 +539,7 @@ export default {
         },
         downLoadCase(){
           var  surveyId = parseInt(this.surveyId)
-          window.open(this.downloatUrl+this.ajaxUrl+"/survey-detail/v1/download/"+surveyId)
+          window.open(this.ajaxUrl+"/survey-detail/v1/download/"+surveyId)
         },
         cancelCase(){
           var paramData = {
