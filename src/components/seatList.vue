@@ -52,7 +52,7 @@
     font-size:16px;
     font-weight: 600;
   }
- .seatListDialog .scrollBox{
+  .seatListDialog .scrollBox{
     overflow-y: scroll;
     max-height: 60vh;
   }
@@ -150,99 +150,99 @@
 <template>
   <div>
     <div class="seatListDialog hide">
-        <div class="seatListDialogBox">
-          <span @click="closSeatDialog" class="right closSeatMontor">×</span>
-          <div class="oneMonitor clear">
-            <h4 class="dialogTitle" v-if="editorActive">坐席信息</h4>
-            <h4 class="dialogTitle" v-else>添加坐席</h4>
-            <div class="clear scrollBox">
-              <div v-if="editorActive" style="margin-top:20px;" v-for="seatInfo in seatInfo">
-                <div class="InputSeatInfo">
-                  <span>坐席帐号:</span>
-                  <input type="text" disabled id="seatuserName" :value="seatInfo.userName"/>
-                  <span>坐席姓名:</span>
-                  <input type="text" v-model="chinaName"/>
-                </div>
-                <div class="InputSeatInfo">
-                  <span>坐席手机号:</span>
-                  <input type="text" v-model="telephone" maxlength="11" />
-                  <span>坐席密码:</span>
-                  <input v-model="password" type="text"  maxlength="80" />
-                </div>
-                <div class="InputSeatInfo">
-                  <span>帐号状态:</span>
-                  <select v-model="isLocked">
-                    <option v-for="item in isLockedOption" :value="item.isLocked"  v-if="item.isLocked == isLocked">{{item.name}}</option>
-                    <option :value="item.isLocked" v-else>{{item.name}}</option>
-
-                  </select>
-                </div>
-                <div class="InputSeatInfo">
-                  <span class="backColorGreen saveButton" @click="saveSeats()"> 保存</span>
-                </div>
-                <div class="seatListFoot">
-                  <div class="footTop">
-                    <div class="seatInfoFoot">
-                      <span class="infoDetail" v-if="seatInfo.userStatus == 2">当前状态: 繁忙 <i class="colorRed">(处理中-未连线)</i></span>
-                      <span class="infoDetail" v-if="seatInfo.userStatus == 0">当前状态: 空闲 </span>
-                      <span class="infoDetail" v-if="seatInfo.userStatus == 1">当前状态: 不在线 </span>
-                      <span class="infoDetail">未处理案件: {{seatInfo.waitingCaseCount}}单</span>
-                    </div>
-                    <div class="seatInfoFoot">
-                      <span class="infoDetail">今日已处理案件: {{seatInfo.handleCaseCount}}单</span>
-                      <span class="infoDetail" v-if="seatInfo.loginTime != null">今日登陆时间: {{seatInfo.loginTime}}</span>
-                    </div>
-                    <div class="seatInfoFoot" style="padding-bottom: 20px;">
-                      <span class="infoDetail">累计处理案件: {{seatInfo.totalHandleCaseCount}}单</span>
-                    </div>
-                  </div>
-                  <div class="footBottom" v-if="accidendsActive">
-                    <div class="seatInfoFoot">
-                      <span class="infoDetail">报案人车牌号: {{seatInfo.siReportLicenseNo}}</span>
-                      <span class="infoDetail">报案人手机号: {{seatInfo.siReportPhone}}</span>
-                    </div>
-                    <div class="seatInfoFoot">
-                      <span class="infoDetail">事故时间: {{seatInfo.siAccidentTime}}</span>
-                      <span class="infoDetail">事故地点: {{seatInfo.siAccidentAddress}}</span>
-
-                    </div>
-                    <div class="seatInfoFoot">
-                      <span class="infoDetail">开始处理时间: {{seatInfo.siStartTime}}</span>
-                      <span class="infoDetail">案件状态: {{seatInfo.siStatusText}}</span>
-                    </div>
-                  </div>
-                </div>
+      <div class="seatListDialogBox">
+        <span @click="closSeatDialog" class="right closSeatMontor">×</span>
+        <div class="oneMonitor clear">
+          <h4 class="dialogTitle" v-if="editorActive">坐席信息</h4>
+          <h4 class="dialogTitle" v-else>添加坐席</h4>
+          <div class="clear scrollBox">
+            <div v-if="editorActive" style="margin-top:20px;" v-for="seatInfo in seatInfo">
+              <div class="InputSeatInfo">
+                <span>坐席帐号:</span>
+                <input type="text" disabled id="seatuserName" :value="seatInfo.userName"/>
+                <span>坐席姓名:</span>
+                <input type="text" v-model="chinaName"/>
               </div>
-              <div style="margin-top:20px;" v-if="editorActive == false">
-                <div class="addSeatInput">
-                  <span>坐席帐号</span>
-                  <input v-model="username" type="text" placeholder="请输入坐席帐号"/>
+              <div class="InputSeatInfo">
+                <span>坐席手机号:</span>
+                <input type="text" v-model="telephone" maxlength="11" />
+                <span>坐席密码:</span>
+                <input v-model="password" type="text"  maxlength="80" />
+              </div>
+              <div class="InputSeatInfo">
+                <span>帐号状态:</span>
+                <select v-model="isLocked">
+                  <option v-for="item in isLockedOption" :value="item.isLocked"  v-if="item.isLocked == isLocked">{{item.name}}</option>
+                  <option :value="item.isLocked" v-else>{{item.name}}</option>
+
+                </select>
+              </div>
+              <div class="InputSeatInfo">
+                <span class="backColorGreen saveButton" @click="saveSeats()"> 保存</span>
+              </div>
+              <div class="seatListFoot">
+                <div class="footTop">
+                  <div class="seatInfoFoot">
+                    <span class="infoDetail" v-if="seatInfo.userStatus == 2">当前状态: 繁忙 <i class="colorRed">(处理中-未连线)</i></span>
+                    <span class="infoDetail" v-if="seatInfo.userStatus == 0">当前状态: 空闲 </span>
+                    <span class="infoDetail" v-if="seatInfo.userStatus == 1">当前状态: 不在线 </span>
+                    <span class="infoDetail">未处理案件: {{seatInfo.waitingCaseCount}}单</span>
+                  </div>
+                  <div class="seatInfoFoot">
+                    <span class="infoDetail">今日已处理案件: {{seatInfo.handleCaseCount}}单</span>
+                    <span class="infoDetail" v-if="seatInfo.loginTime != null">今日登陆时间: {{seatInfo.loginTime}}</span>
+                  </div>
+                  <div class="seatInfoFoot" style="padding-bottom: 20px;">
+                    <span class="infoDetail">累计处理案件: {{seatInfo.totalHandleCaseCount}}单</span>
+                  </div>
                 </div>
-                <div class="addSeatInput">
-                  <span>坐席帐号密码</span>
-                  <input v-model="userpwd" type="text" placeholder="请输入坐席帐号密码"/>
-                </div>
-                <div class="addSeatInput">
-                  <span>坐席姓名</span>
-                  <input v-model="userchinaname" type="text" placeholder="请输入坐席姓名"/>
-                </div>
-                <div class="addSeatInput">
-                  <span>坐席手机号</span>
-                  <input v-model="userphone" type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
-                </div>
-                <div class="addSeatInput">
-                  <span>帐号状态</span>
-                  <select v-model="addislocked">
-                    <option value="">请选择帐号状态</option>
-                    <option v-for="item in isLockedOption" :value="item.isLocked">{{item.name}}</option>
-                  </select>
-                </div>
-                <div class="addSeatInput">
-                  <span class="sureAddSeat backColorGreen" @click="addSeats">确定</span>
+                <div class="footBottom" v-if="accidendsActive">
+                  <div class="seatInfoFoot">
+                    <span class="infoDetail">报案人车牌号: {{seatInfo.siReportLicenseNo}}</span>
+                    <span class="infoDetail">报案人手机号: {{seatInfo.siReportPhone}}</span>
+                  </div>
+                  <div class="seatInfoFoot">
+                    <span class="infoDetail">事故时间: {{seatInfo.siAccidentTime}}</span>
+                    <span class="infoDetail">事故地点: {{seatInfo.siAccidentAddress}}</span>
+
+                  </div>
+                  <div class="seatInfoFoot">
+                    <span class="infoDetail">开始处理时间: {{seatInfo.siStartTime}}</span>
+                    <span class="infoDetail">案件状态: {{seatInfo.siStatusText}}</span>
+                  </div>
                 </div>
               </div>
             </div>
+            <div style="margin-top:20px;" v-if="editorActive == false">
+              <div class="addSeatInput">
+                <span>坐席帐号</span>
+                <input v-model="username" type="text" placeholder="请输入坐席帐号"/>
+              </div>
+              <div class="addSeatInput">
+                <span>坐席帐号密码</span>
+                <input v-model="userpwd" type="text" placeholder="请输入坐席帐号密码"/>
+              </div>
+              <div class="addSeatInput">
+                <span>坐席姓名</span>
+                <input v-model="userchinaname" type="text" placeholder="请输入坐席姓名"/>
+              </div>
+              <div class="addSeatInput">
+                <span>坐席手机号</span>
+                <input v-model="userphone" type="tel" maxlength="11" placeholder="请输入坐席手机号"/>
+              </div>
+              <div class="addSeatInput">
+                <span>帐号状态</span>
+                <select v-model="addislocked">
+                  <option value="">请选择帐号状态</option>
+                  <option v-for="item in isLockedOption" :value="item.isLocked">{{item.name}}</option>
+                </select>
+              </div>
+              <div class="addSeatInput">
+                <span class="sureAddSeat backColorGreen" @click="addSeats">确定</span>
+              </div>
+            </div>
           </div>
+        </div>
       </div>
     </div>
     <div class="seatList">
@@ -269,7 +269,7 @@
           <p class="minuterdetail" style="padding-left: 8%;" v-if="item.loginTime != null">今日登陆时间:{{item.loginTime}}</p>
           <p class="minuterdetail" style="padding-left: 8%;">累计处理案件: {{item.totalHandleCaseCount}}</p>
         </div>
-        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="(item.sysUserStatus == 1 || item.sysUserStatus == null) ">
+        <div class="seatListMinute left bordercolorGray" style="background:#F8F8F9;" v-for="item in seatsList"  @click="goSeatInfo(item.userId)" v-if="((item.sysUserStatus == 1 || item.sysUserStatus == null)&&(item.userStatus!=2)) ">
           <div class="imgBox">
             <img src="../images/kefuhui.png">
             <h3 class="minuteNuber" style="color:#999">{{item.chinaName}}</h3>
@@ -314,7 +314,6 @@
         editorActive: false,
         seatsList: [],
         seatInfo: [],
-        ajaxUrl: "/boot-pub-survey-manage",
         caseDetailActive: false,
       }
     },
@@ -325,12 +324,12 @@
     },
     watch: {
       "editorActive": function(){
-          if(this.editorActive == false){
-            $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
+        if(this.editorActive == false){
+          $(".seatListDialogBox").addClass("seatListDialogBoxAdd")
 
-          }else{
-            $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
-          }
+        }else{
+          $(".seatListDialogBox").removeClass("seatListDialogBoxAdd")
+        }
       },
       getUserIcons(val) {
         this.caseDetailActive = val;
@@ -348,9 +347,9 @@
         this.$message.success(resdes);
       },
       getSeatList(){
-       var orgcode = localStorage.getItem('orgcode')
+        var orgcode = localStorage.getItem('orgcode')
         var paramData = {
-         "orgcode": orgcode
+          "orgcode": orgcode
         }
         axios.post(this.ajaxUrl+"/pub/survey/v1/custom/service/list", paramData)
           .then(response => {
@@ -374,7 +373,7 @@
       goSeatInfo(userId){//坐席信息编辑
         this.userId = userId
         var paramData = {
-              "userId": userId,
+          "userId": userId,
         }
         $(".seatListDialog").removeClass("hide");
         this.editorActive = true;

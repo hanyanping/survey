@@ -10,8 +10,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/style/reset.css'
 import 'viewerjs/dist/viewer.css'
 Vue.prototype.ajaxUrl = "/boot-pub-survey-manage"
-// Vue.prototype.downloatUrl = "https://chakan.zhongchebaolian.com"//生产
-Vue.prototype.downloatUrl = "https://survey.zhongchebaolian.com"//测试
 
 
 // http请求拦截器

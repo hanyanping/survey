@@ -257,7 +257,7 @@ html,body{
 .el-input--suffix .el-input__inner {
   padding-right: 14px;
   border: 1px solid #bbb;
-  margin-top: 10px;
+  margin-top: 15px;
   height: 35px;
   color: #232323;
 }
@@ -296,4 +296,27 @@ el-checkbox__inner:hover{
 }
 .el-checkbox__input.is-checked+.el-checkbox__label {
   color: #333;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 120px;
+  height: 150px;
+  display: block;
 }

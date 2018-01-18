@@ -31,7 +31,7 @@
   .carInfoBox .orderTime{
     color: #232323;
   }
-   .carInfoBox{
+  .carInfoBox{
     min-width: 23%;
     margin: 10px 15px;
     padding: 10px;
@@ -109,7 +109,7 @@
                   </div>
                 </div>
               </div>
-            <div  class="left bordercolorGray carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="(item.currentStatusAuto == null || item.currentStatusAuto  == 1)">
+            <div  class="left bordercolorGray carInfoBoxTwo carInfoBox" @click="assignThis(item.userId)" v-if="((item.currentStatusAuto == null || item.currentStatusAuto  == 1)&&(item.currentStatusManual != 2))">
               <div class="flex">
                 <div class="imgBox">
                   <img src="../images/kefuBlue.png">
@@ -123,10 +123,8 @@
               </div>
             </div>
           </div>
-          </div>
-
+        </div>
       </div>
-
     </div>
   </div>
 </template>

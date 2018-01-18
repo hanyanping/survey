@@ -11,8 +11,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/boot-pub-survey-manage': {
-        // target: 'http://192.168.1.69:18081',      // 志猛个人服务器
-        // target: 'http://192.168.1.113:9099',      // 和鹏个人服务器
+        // target: 'http://192.168.1.140:8080',      // 志猛个人服务器
+        // target: 'http://192.168.1.154:9001',      // 和鹏个人服务器
         // target: 'http://192.168.1.18:8080',//元鹏
         target: 'https://chakan.zhongchebaolian.com', // 生产
         // target: 'https://survey.zhongchebaolian.com', // 测试
@@ -38,7 +38,8 @@ module.exports = {
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.HOST, if port is in use, a free one will be determined
+    // host: '0.0.0.0', // can be overwritten by process.env.HOST
+    port: 8084, // can be overwritten by process.env.HOST, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
