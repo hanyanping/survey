@@ -123,7 +123,7 @@
     <div class="header" style="font-size: 85%;">
       <div style="display: flex;border-bottom:1px solid #bbb;padding-bottom:15px;">
         <img style="margin-top:10px;" src="../images/logo.png"/>
-        <span class="headerText">  <span>|</span>事故e处理-视频查勘定损平台</span>
+        <span class="headerText">  <span>|</span>事故e处理-视频查勘定损管理平台</span>
       </div>
 
     </div>
@@ -246,6 +246,7 @@
                   localStorage.setItem('chinaName',response.data.data.user.chinaName)
                   localStorage.setItem('userName',response.data.data.user.userName)
                   localStorage.setItem('orgcode',response.data.data.user.orgcode);
+                  localStorage.setItem('insurecompanyCode',response.data.data.org.insurecompanyCode);
                   var insititueName = 0,caseNum = 0;
                   for(let i in response.data.data.userfunctions){
                     if(response.data.data.userfunctions[i].name == "机构管理"){

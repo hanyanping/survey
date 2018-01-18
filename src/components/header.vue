@@ -5,7 +5,7 @@
     margin-left: 15px;
     display: inline-block;
     margin-top: 25px;
-    width: 210px;
+    min-width: 210px;
 
   }
   .headerText span{
@@ -283,11 +283,15 @@
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">处理机构</span>
-                <select class="creatInput" v-model="orgCode">
+                <select class="creatInput" v-model="orgCode" v-if="zhongcheActive">
                   <option v-for="item in orgOption" :value="item.code">{{item.name}}</option>
                   <!--<option value="">请选择机构</option>-->
-
                 </select>
+                <select class="creatInput" v-model="orgCode" v-else>
+                  <option v-for="item in orgOption" :value="item.code">{{item.name}}</option>
+                  <!--<option value="">请选择机构</option>-->
+                </select>
+
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">查勘类型</span>
@@ -352,7 +356,7 @@
     <div class="header" style="font-size: 85%;">
       <div style="display: flex;">
           <img style="margin-top:10px;" src="../images/logo.png"/>
-          <span class="headerText"> <span>|</span>事故e处理-视频查勘定损平台</span>
+          <span class="headerText"> <span>|</span>事故e处理-视频查勘定损管理平台</span>
          <div class="menu" v-if="headerActiveOne == 'true'">
            <el-tabs v-model="activeName" @tab-click="handleClick" >
               <el-tab-pane  label="案件管理" name="first">
@@ -396,6 +400,7 @@
   export default {
     data(){
       return{
+        zhongcheActive: true,
         chinaName: '',
         userName: '',
         headerActiveOne: false,
@@ -417,6 +422,7 @@
         cityName: "",
         adressValue: "",
         accidentaddress: "",
+        insurecompanyCode: "",
         ajaxUrl: "/boot-pub-survey-manage",
         radio: '',
         getCity: "京",
@@ -435,6 +441,7 @@
       this.chinaName = localStorage.getItem('chinaName')
       this.userName = localStorage.getItem('userName')
       this.headerActiveOne = localStorage.getItem('setHeaderActive');
+      this.insurecompanyCode = localStorage.getItem('insurecompanyCode');
       if(this.headerActiveOne == 'true'){
         this.insitituteActive = false;
         this.surveyActive = false;
@@ -446,6 +453,7 @@
         this.caseActive = false;
         this.seatActive = false;
       }
+
     },
     watch:{
       "activeName" (){
@@ -496,13 +504,15 @@
                 this.$store.commit('getcaseListActive', false);
                 this.$store.commit('getclickEditorActive', false);
                 this.$store.commit('getinsitituPageno', 1);
-
                 localStorage.removeItem('insititutEditorData');//机构编辑
                 localStorage.removeItem('caseDetailData');//详情信息
                 localStorage.removeItem("setHeaderActive");
                 localStorage.removeItem("orgcode");//登录信息
                 localStorage.removeItem("insitituData");//机构信息
                 localStorage.removeItem("signSeatData");//坐席信息
+                localStorage.removeItem("insurecompanyCode");//坐席信息
+                localStorage.removeItem("userName");//坐席信息
+
                 //清除缓存
                 this.$router.push({path:"/"})
               }else{
@@ -524,12 +534,37 @@
       open2(resdes) {
         this.$message.success(resdes);
       },
+
       initMap() {
         // 添加百度地图
        this.map = new BMap.Map("allmap");
        },
         handleClick(tab, event) {
         },
+      removeArr(_arr,_obj){
+        var length = _arr.length;
+        for(var i = 0; i < length; i++)
+        {
+          if(_arr[i] == _obj)
+          {
+            if(i == 0)
+            {
+              _arr.shift(); //删除并返回数组的第一个元素
+              return;
+            }
+            else if(i == length-1)
+            {
+              _arr.pop();  //删除并返回数组的最后一个元素
+              return;
+            }
+            else
+            {
+              _arr.splice(i,1); //删除下标为i的元素
+              return;
+            }
+          }
+        }
+      },
         openCreatCase(){//打开创建案件
           document.getElementsByClassName('scrollBox')[0].scrollTop = '100px';
           console.log( document.getElementsByClassName('scrollBox')[0].scrollTop)
@@ -551,6 +586,18 @@
                     }
                   }
                   this.orgOption= response.data.data.org;
+                  var zhognche = {}
+                  if(this.insurecompanyCode == 111111111111){
+                    this.zhongcheActive = false;
+                    for(let i in this.orgOption){
+                      if(this.orgOption[i].insurecompanyCode == 111111111111){
+                        zhognche = this.orgOption[i];
+                       this.removeArr(this.orgOption,this.orgOption[i])
+                        this.orgOption.unshift(zhognche)
+                      }
+                    }
+                    console.log(this.orgOption)
+                  }
                   for(let i in this.orgOption){
                     if(i== 0){
                       this.orgCode = this.orgOption[i].code;
@@ -575,6 +622,8 @@
         creatNewCase() {//确定创建案件
           this.companyName = $("#companyName").find("option:selected").text();
           this.cityName = $("#cityName").find("option:selected").text();
+          this.licensenoTwo = this.licensenoTwo.replace(/\s|\xA0/g,"");
+          console.log(this.licensenoTwo)
           if(this.phoneno == ""){
             this.open4("请输入手机号")
           }else if(this.licensenoTwo == ""){

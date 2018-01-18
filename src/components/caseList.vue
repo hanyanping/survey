@@ -37,7 +37,7 @@
           </el-option>
         </el-select>
         <span>事故时间:</span>
-        <div class="" style="display:inline-block;">
+        <div class="" style="display:inline-block;padding-top:12px;">
           <el-date-picker
             v-model="value6"
             type="daterange"
@@ -49,7 +49,7 @@
         <input type="hidden" placeholder="开始时间"  v-model="accidentStartTime" style="margin-right: 5px;" class="smInp" name="startDate" id="startTime" readonly="readonly">
         <input class="smInp" name="endDate" v-model="accidentEndTime" style="margin-left: 5px;" type="hidden" id="endTime" readonly="readonly" placeholder="结束时间">
         <span>处理时间:</span>
-        <div class="" style="display:inline-block;">
+        <div class="" style="display:inline-block;padding-top:12px;">
           <el-date-picker
             v-model="value7"
             type="daterange"
@@ -60,6 +60,15 @@
         </div>
         <input type="hidden" v-model="handleStartTime" placeholder="开始时间" style="margin-right: 5px;" class="smInp" name="dealstartDate" id="dealstartTime" readonly="readonly"/>
         <input class="smInp" name="dealendDate" v-model="handleEndTime" style="margin-left: 5px;" type="hidden" id="dealendTime" readonly="readonly" placeholder="结束时间"/>
+        <span >所属公司:</span>
+        <el-select v-model="thirdplatform"  name="case" placeholder="请选择所属公司">
+          <el-option
+            v-for="item in platformOption"
+            :key="item.code"
+            :label="item.name"
+            :value="item.code">
+          </el-option>
+        </el-select>
         <span class="caseListSure" @click="formSure">确定 </span>
         <span class="caseListReset" @click="resetData">重置</span>
 
@@ -70,7 +79,7 @@
         <span style="line-height: 35px;">共: {{pages}}页,</span>
         <span>{{totalCount}}条, </span>
         <span>当前页: {{currentCount}}条</span>
-        <span class="caseListReset right" style="margin-right: 4%;display:none;" @click="downloadList">案件信息下载</span>
+        <span class="caseListReset right" style="margin-right: 4%;" @click="downloadList">案件信息下载</span>
       </div>
       <table class="table" border="0" cellspacing="0" cellpadding="0" style="border-top: 1px solid #bbb;">
         <thead>
@@ -118,7 +127,7 @@
           <td>{{item.accidentAddress}}</td>
           <td>{{item.survey}}</td>
           <td>{{item.videoConnectRequestCount}}</td>
-          <td ><span v-if="item.webAllot == '0' && item.surveyStatus != '08'" class="listAssign" @click="signSeats(item.id)" >指派</span><i v-if="item.webAllot == '0'&& item.surveyStatus != '08'">|</i><span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
+          <td ><span v-if="item.surveyStatus == '06'" class="listAssign" @click="signSeats(item.id)" >指派</span><i v-if="item.surveyStatus == '06'">|</i><span  class="listView" @click="goCaseDetail(item.id,item.surveyStatus)">查看</span></td>
         </tr>
         </tbody>
       </table>
@@ -146,6 +155,8 @@
   export default {
     data() {
       return {
+        thirdplatform: "",
+        platformOption: [],
         tableActive: false,
         reporterPhoneNo: "",
         reporterCarLicenseNo: "",
@@ -227,13 +238,32 @@
 
     created() {
       this.getCompaney();
-      this.getCaseList()
+      this.getCaseList();
+      this.getThirdPlate()
     },
     mounted() {
       this.caseDetailActive = this.$store.state.caseDetailActive;
     },
       methods: {
-
+      //所属公司
+        getThirdPlate(){
+            axios.get(this.ajaxUrl+'/pub/survey/v1/third/platform')
+              .then(response => {
+                if(response.data.rescode == 200){
+                 this.platformOption =  response.data.data;
+                }else{
+                  this.open4(response.data.resdes)
+                  if(response.data.rescode == 300){
+                    this.$router.push({path:'/'})
+                  }
+                }
+              }, err => {
+                console.log(err);
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+        },
         open4(resdes) {
           this.$message.error(resdes);
         },
@@ -291,6 +321,7 @@
             })
         },
         getCaseList() {
+
           if(this.value6){
             for(let i in this.value6){
               if(i == 0){
@@ -309,19 +340,20 @@
           if(this.value7){
             for(let i in this.value7){
               if(i == 0){
-                this.handleStartTime = new Date(this.value6[0]);
+                this.handleStartTime = new Date(this.value7[0]);
               }else if(i == 1){
-                this.handleEndTime = new Date(this.value6[1])
+                this.handleEndTime = new Date(this.value7[1])
                 this.handleEndTime =  new Date(this.handleEndTime.getTime()+24*60*60*1000-1)
               }
             }
             this.handleStartTime = this.handleStartTime.getFullYear() + '-' + (this.handleStartTime.getMonth() + 1) + '-' + this.handleStartTime.getDate()+ " " + this.handleStartTime.getHours() + ":" + this.handleStartTime.getMinutes() + ":" + this.handleStartTime.getSeconds();
-            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ "" + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
+            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ " " + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
           }else{
             this.handleStartTime = "";
             this.handleEndTime = "";
           }
           var paramData = {
+            "thirdPartyPlatformCode": this.thirdplatform,
             "currentPageNo": this.currentPageNo,
             "pageSize": this.pageSize,
             "insuranceCompanyCode": this.insuranceCompanyCode,
@@ -399,7 +431,7 @@
               }
             }
             this.handleStartTime = this.handleStartTime.getFullYear() + '-' + (this.handleStartTime.getMonth() + 1) + '-' + this.handleStartTime.getDate()+ " " + this.handleStartTime.getHours() + ":" + this.handleStartTime.getMinutes() + ":" + this.handleStartTime.getSeconds();
-            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ "" + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
+            this.handleEndTime = this.handleEndTime.getFullYear() + '-' + (this.handleEndTime.getMonth() + 1) + '-' + this.handleEndTime.getDate()+ " " + this.handleEndTime.getHours() + ":" + this.handleEndTime.getMinutes() + ":" + this.handleEndTime.getSeconds();
           }else{
             this.handleStartTime = "";
             this.handleEndTime = "";

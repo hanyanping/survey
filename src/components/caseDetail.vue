@@ -244,8 +244,15 @@
               <!--<p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p>-->
             <!--</div>-->
             <div class="aimInfo videoBox">
-              <div id="videoList" class="clear">
+              <div id="videoList" class="clear" v-if="showOldActive">
                 <div class="left" v-for="(item,index) in surveyVideoRooms" :id='"video"+index' style="width:280px;height:200px;margin:6px 10px;"  :swfobjId='"videourl"+index'></div>
+              </div>
+              <div class="videoList clear" v-else>
+
+                <div class="left vid-wrapper" id="videoBox" v-for="(item,index) in surveyVideoRooms"   >
+                  <video  controls="controls" :src="item.videoRoomId" type="video/mp4"  style="width:280px;height:200px;margin:6px 10px;">
+                  </video>
+                </div>
               </div>
             </div>
           </div>
@@ -280,6 +287,7 @@ import axios from 'axios'
 export default {
   data() {
       return{
+        city: "",
         currentPageNoAim: 1,//当前页码
         pageSizeAim: 4,//每页记录数
         totalCountAim: 0,//总条数
@@ -310,12 +318,22 @@ export default {
        this.caseDetailData =  JSON.parse(localStorage.getItem("caseDetailData"));
        this.longitude = this.caseDetailData.accidentInfo.accidentAddrLongitude;
        this.latitude = this.caseDetailData.accidentInfo.accidentAddrLatitude;
+       this.city = this.caseDetailData.accidentInfo.cityCode;
        if(this.caseDetailData.sceneSurveyorInfo != null){
          this.coordinates = this.caseDetailData.sceneSurveyorInfo.coordinates;//经纬度轨迹数组
        }
        this.mark = this.caseDetailData.accidentInfo.appSource;
        this.surveyId = this.caseDetailData.id;
        this.surveyVideoRooms = this.caseDetailData.surveyVideoRooms;
+      for(let i in this.surveyVideoRooms){
+        var indexof = this.surveyVideoRooms[i].videoRoomId.indexOf("http:");
+        console.log(indexof)
+        if(indexof > -1){//新数据
+          this.showOldActive = false;
+        }else{//老数据
+          this.showOldActive = true;
+        }
+      }
        if(this.caseDetailData.sceneSurveyorInfo != null){
            if(this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo === null){
              this.caseDetailData.sceneSurveyorInfo.sceneSurveyorPhoneNo = '暂无'
@@ -362,9 +380,11 @@ export default {
        }
     },
     mounted() {
-      this.$nextTick(() => {
-        this.getvedio()
-      })
+      if(this.showOldActive){
+        this.$nextTick(() => {
+          this.getvedio()
+        })
+      }
     },
     props: {
 //      caseOrder: string
@@ -407,7 +427,11 @@ export default {
          this.thirdvehicleLicenseNo =  vehicleLicenseNo
         },
         handleCurrentChangethird(currentPage){
-          this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,"")
+          for(let i in this.accidentVehicleInfos){
+            if(this.thirdvehicleLicenseNo == this.accidentVehicleInfos[i].vehicleLicenseNo){
+              this.getCasePhones(currentPage,4,this.thirdvehicleLicenseNo,this.surveyNo,i)
+            }
+          }
         },
         handleCurrentChangeAim(currentPage) {//跳转
           //当前页改变调用接口 currentPage   pageSizeAim
@@ -437,10 +461,10 @@ export default {
                       })
                     })
                   }else{
-
                     var thirdLength = this.accidentVehicleInfos.length;
                     for(let i in this.accidentVehicleInfos){
                         if(i == source){
+                          this.accidentVehicleInfos[i].thirdCarImg = [];
                           for(let j in response.data.data.records){
                             this.accidentVehicleInfos[i].thirdCarImg.push(response.data.data.records[j])
                           }
@@ -449,14 +473,8 @@ export default {
                         }
                     }
                       this.$nextTick(() => {
+                        this.thirdCar = ''
                         this.thirdCar = this.accidentVehicleInfos;
-                        console.log(this.thirdCar)
-                        for(let i in this.thirdCar)
-                        {
-for(let j in this.thirdCar[i].thirdCarImg){
-  console.log(this.thirdCar[i].thirdCarImg[j].photoTypeComment)
-}
-                        }
                         for (let i in this.thirdCar) {
                           this.$nextTick(() => {
                             new Viewer(document.getElementsByClassName('suibian')[i], {
@@ -545,7 +563,8 @@ for(let j in this.thirdCar[i].thirdCarImg){
           var paramData = {
             "action": "cancel",
             "surveyno": this.surveyNo,
-            "mark": this.mark
+            "mark": this.mark,
+            "city": this.city
           }
           axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
             .then(response => {
