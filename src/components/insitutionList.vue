@@ -257,6 +257,8 @@
         this.clickEditorActive = val;
         if(this.clickEditorActive){
           this.getInsitituList();
+          console.log(this.$store.state.insitituPageno)
+          console.log(this.pageno)
         }
       },
       getinsitituPage(val){
@@ -268,7 +270,8 @@
     },
     created(){
       this.getInsitituList();
-      this.pageno = this.$store.state.insitituPageno
+      this.pageno = this.$store.state.insitituPageno;
+      console.log(this.pageno)
     },
     methods: {
       handleCheckedCitiesChange(value) {
@@ -283,10 +286,10 @@
         this.$message.success(resdes);
       },
       getInsitituList(){
-        console.log(this.pageno)
+        this.pageno = this.$store.state.insitituPageno;
         var paramData = {
           "pageno": this.pageno,
-          "pagesize": this.pagesize,
+          "pagesize": this.pagesize
         }
         axios.post(this.ajaxUrl+"/pubsurvey/manage/department/v1/orglist",paramData)
           .then(response => {

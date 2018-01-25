@@ -269,6 +269,7 @@
             .then(response => {
               if(response.data.rescode == 200){
                 this.$store.commit('setInsititutEditorActive', false);
+//                clickEditorActive
                 this.$store.commit('getclickEditorActive', true);
                 this.open2(response.data.resdes)
               }else{

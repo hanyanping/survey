@@ -321,7 +321,6 @@
             })
         },
         getCaseList() {
-
           if(this.value6){
             for(let i in this.value6){
               if(i == 0){

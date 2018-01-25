@@ -366,6 +366,7 @@
                 this.todayWaitAllocatBackstageSurveyorCount = 0;
               }
             }else{
+              console.log(response.data)
               this.open4(response.data.resdes)
               if(response.data.rescode == 300){
                 this.$router.push({path:'/'})
