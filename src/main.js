@@ -19,9 +19,11 @@ if(config.url == '/boot-pub-survey-manage/monitor/v1/overview'){
   loadinginstace = "";
 }else if(config.url == '/boot-pub-survey-manage/pub/survey/v1/page'){
   loadinginstace = "";
-}else if(config.url != '/boot-pub-survey-manage/survey-detail/v1/photo/page'){
+}else if(config.url == '/boot-pub-survey-manage/survey-detail/v1/photo/page'){
   loadinginstace = "";
-}else if(config.url != '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
+}else if(config.url == '/boot-pub-survey-manage/pubsurvey/manage/department/v1/14/citys'){
+  loadinginstace = "";
+}else if(config.url == '/boot-pub-survey-manage/survey-detail/v1/query/note'){
   loadinginstace = "";
 }else{
   loadinginstace = ElementUI.Loading.service({ fullscreen: true })
@@ -38,7 +40,7 @@ if(config.url == '/boot-pub-survey-manage/monitor/v1/overview'){
 axios.interceptors.response.use(data => {// 响应成功关闭loading
   if (loadinginstace) {
     loadinginstace.close()
-    loadinginstace = ''
+    loadinginstace = '';
   }
   if (data.data.rescode == 300) {
     router.push('/')

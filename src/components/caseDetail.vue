@@ -152,7 +152,14 @@
     line-height: 35px;
     text-align: center;
     cursor: pointer;
-
+  }
+  .beizhuInfo{
+    border: 1px solid #bbb;
+    min-height:100px;
+    width:100%;
+    padding:10px 16px;
+    font-size: 14px;
+    line-height: 20px;
   }
 </style>
 <template>
@@ -184,6 +191,14 @@
               </div>
 
               <div class="caseInfoBox" v-if="caseDetailData.accidentInfo.exceptionReason != null"><span>异常原因：</span><i>{{caseDetailData.accidentInfo.exceptionReason}}</i></div>
+          </div>
+          <div class="AimCar" v-if="beizhuActive">
+            <div  class="aimheader">备注信息</div>
+            <div class="aimInfo">
+              <div class="beizhuInfo" style="">
+                {{beizhuInfo}}
+              </div>
+            </div>
           </div>
           <div class="AimCar">
             <div class="aimheader">标的车</div>
@@ -287,6 +302,8 @@ import axios from 'axios'
 export default {
   data() {
       return{
+        beizhuActive: false,
+        beizhuInfo: "",
         city: "",
         currentPageNoAim: 1,//当前页码
         pageSizeAim: 4,//每页记录数
@@ -368,6 +385,7 @@ export default {
          }
        }
        this.surveyNo = this.caseDetailData.accidentInfo.surveyNo;
+       this.getBeizhu()
        if("reportVehicleInfo" in this.caseDetailData){
         this.getCasePhones(1,4,this.caseDetailData.reportVehicleInfo.vehicleLicenseNo,this.surveyNo,"")
        }
@@ -390,6 +408,28 @@ export default {
 //      caseOrder: string
     },
       methods: {
+        getBeizhu(){
+          $(".beizhuDiolag").removeClass("hide");
+          var data = {
+            'surveyNo':this.surveyNo,
+          }
+          axios.post(this.ajaxUrl+"/survey-detail/v1/query/note",data)
+            .then(response => {
+              if(response.data.rescode == 200){
+                if(response.data.data != '' || response.data.data != null){
+                  this.beizhuInfo = response.data.data.noteContent;
+                  this.beizhuActive = true;
+                }
+              }else{
+                this.open4(response.data.resdes)
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
         getvedio(){
           if(this.surveyVideoRooms.length!=0){
            this.$nextTick(() => {

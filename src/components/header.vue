@@ -252,7 +252,7 @@
             <div style="margin-top:20px;">
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人手机号</span>
-                <input type="tel" class="creatInput" v-model="phoneno" maxlength="11" placeholder="请输入报案人手机号"/>
+                <input type="tel" class="creatInput" v-model="phoneno"  maxlength="11" placeholder="请输入报案人手机号"/>
               </div>
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">报案人车牌号</span>
@@ -311,6 +311,7 @@
                   <option value="1" >坐席</option>
                   <option value="0">点我达</option>
                   <option value="2">顺丰</option>
+                  <option value="3">闪送</option>
                 </select>
               </div>
               <!--<div class="addinsitituteInput">-->
@@ -623,8 +624,13 @@
           this.companyName = $("#companyName").find("option:selected").text();
           this.cityName = $("#cityName").find("option:selected").text();
           this.licensenoTwo = this.licensenoTwo.replace(/\s|\xA0/g,"");
-          console.log(this.licensenoTwo)
-          if(this.phoneno == ""){
+          this.phoneno = this.phoneno.replace(/\s/g,"");
+          var reg = new RegExp("^[0-9]*$");
+          if(!reg.test(this.phoneno)){
+            this.open4("请输入正确手机号")
+          }else if(this.phoneno.length<11){
+            this.open4("请输入正确手机号")
+          }else if(this.phoneno == ""){
             this.open4("请输入手机号")
           }else if(this.licensenoTwo == ""){
             this.open4("请输入车牌号")
