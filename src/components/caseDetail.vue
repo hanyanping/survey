@@ -231,9 +231,9 @@
             <div class="aimheader">三者车({{item.vehicleLicenseNo}})</div>
             <div class="aimInfo">
               <table class="table" border="0" cellspacing="0" cellpadding="0">
-                <tr><td>车牌号:</td><td>{{item.vehicleLicenseNo}}</td><td>车主电话: </td><td>{{item.contactPhoneNo}}</td></tr>
+                <tr><td>车牌号:</td><td>{{item.vehicleLicenseNo}}</td><td>车主电话: </td><td v-if="item.contactPhoneNo == null"> 暂无</td><td v-else>{{item.contactPhoneNo}}</td></tr>
               </table>
-              <div class="aimCarImg thirdImg">
+              <div class="aimCarImg thirdImg"  v-if="item.thirdCarImg.length!=0">
                 <ul class="suibian">
                   <li v-for="itemImg in item.thirdCarImg">
                     <img :data-src="itemImg.photoUri" :src="itemImg.smallPhotoUri"/>
@@ -488,7 +488,6 @@ export default {
           axios.post(this.ajaxUrl+"/survey-detail/v1/photo/page",paramData)
             .then(response => {
               if(response.data.rescode == 200){
-                if(response.data.data.records.length != 0){
                   if(source == ""){
                     this.recordsImg = response.data.data.records;
                     this.totalCountAim = response.data.data.total;
@@ -527,7 +526,6 @@ export default {
                         }
                       })
                   }
-                }
               }else{
 
               }

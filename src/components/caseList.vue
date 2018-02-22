@@ -8,6 +8,15 @@
         <input type="tel" v-model="reporterPhoneNo" placeholder="请输入手机号" maxlength="11"/>
         <span>保险报案号:</span>
         <input type="text" v-model="reportInsuranceNo" placeholder="请输入保险报案号"/>
+        <span>城市:</span>
+        <el-select v-model="cityCode" name="city" placeholder="请选择城市">
+          <el-option
+            v-for="item in cityOption"
+            :key="item.dcCitycode"
+            :label="item.dcCityName"
+            :value="item.dcCitycode">
+          </el-option>
+        </el-select>
         <span>保险公司:</span>
         <el-select v-model="insuranceCompanyCode" name="Companey" placeholder="请选择保险公司">
           <el-option
@@ -27,6 +36,7 @@
             :value="item.code">
           </el-option>
         </el-select>
+
         <span >案件状态:</span>
         <el-select v-model="surveyStatus"  name="case" placeholder="请选择案件状态">
           <el-option
@@ -155,6 +165,8 @@
   export default {
     data() {
       return {
+        cityCode: "",
+        cityOption: [],
         thirdplatform: "",
         platformOption: [],
         tableActive: false,
@@ -237,6 +249,7 @@
     },
 
     created() {
+      this.getCityList();
       this.getCompaney();
       this.getCaseList();
       this.getThirdPlate()
@@ -245,6 +258,29 @@
       this.caseDetailActive = this.$store.state.caseDetailActive;
     },
       methods: {
+//      城市列表
+        getCityList(){
+          var paramData = {
+            "action": "detail"
+          }
+          axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.cityOption = response.data.data.city;
+                console.log(this.cityOption)
+              }else{
+                if(response.data.rescode == "300"){
+                  this.$router.push({path:"/login"})
+                }
+                this.open4(response.data.resdes);
+              }
+            }, err => {
+              console.log(err);
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        },
       //所属公司
         getThirdPlate(){
             axios.get(this.ajaxUrl+'/pub/survey/v1/third/platform')
@@ -365,6 +401,7 @@
             "accidentEndTime": this.accidentEndTime,
             "handleStartTime":this.handleStartTime,
             "handleEndTime":this.handleEndTime,
+            "cityCode": this.cityCode
           }
           axios.post(this.ajaxUrl+"/pub/survey/v1/page",paramData)
             .then(response => {
@@ -435,7 +472,7 @@
             this.handleStartTime = "";
             this.handleEndTime = "";
           }
-          window.open(this.ajaxUrl+"/pub/survey/v1/exportexcel?insuranceCompanyCode="+this.insuranceCompanyCode+"&orgCode="+this.orgCode+"&reporterCarLicenseNo="+this.reporterCarLicenseNo+"&reportInsuranceNo="+this.reportInsuranceNo+"&reporterPhoneNo="+this.reporterPhoneNo+"&surveyStatus="+this.surveyStatus+"&accidentStartTime="+this.accidentStartTime+"&accidentEndTime="+this.accidentEndTime+"&handleStartTime="+this.handleStartTime+"&handleEndTime="+this.handleEndTime)
+          window.open(this.ajaxUrl+"/pub/survey/v1/exportexcel?insuranceCompanyCode="+this.insuranceCompanyCode+"&orgCode="+this.orgCode+"&reporterCarLicenseNo="+this.reporterCarLicenseNo+"&reportInsuranceNo="+this.reportInsuranceNo+"&reporterPhoneNo="+this.reporterPhoneNo+"&surveyStatus="+this.surveyStatus+"&accidentStartTime="+this.accidentStartTime+"&accidentEndTime="+this.accidentEndTime+"&handleStartTime="+this.handleStartTime+"&handleEndTime="+this.handleEndTime+"&cityCode="+this.cityCode)
         },
         handleClick(row) {
           console.log(row);
@@ -446,6 +483,8 @@
         resetData(){
           this.insuranceCompanyCode = "";
           this.orgCode = "";
+          this.cityCode = '';
+          this.cityOption = [];
           this.reporterCarLicenseNo = "";
           this.reporterPhoneNo = "";
           this.reportInsuranceNo = "";
@@ -456,7 +495,9 @@
           this.handleEndTime = "";
           this.value6 = "";
           this.value7 = "";
-          this.getCaseList()
+          this.getCaseList();
+          this.getCompaney();
+          this.getCityList();
         },
 
         handleCurrentChange(currentPage) {//跳转
