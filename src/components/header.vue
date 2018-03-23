@@ -606,7 +606,7 @@
                   }
                 }else{
                   if(response.data.rescode == "300"){
-                    this.$router.push({path:"/login"})
+                    this.$router.push({path:"/"})
                   }
                   this.open4(response.data.resdes);
                 }
