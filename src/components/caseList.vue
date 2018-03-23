@@ -308,10 +308,38 @@
         },
         signSeats(id){
           this.$store.commit('getsurveyOrderId',id);
-          axios.get(this.ajaxUrl+'/web-surveyor/v1/list')
+          // axios.get(this.ajaxUrl+'/web-surveyor/v1/list')
+          //   .then(response => {
+          //     if(response.data.rescode == 200){
+          //       if(response.data.data.length != 0){
+          //         localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
+          //         this.$store.commit('setSignSeatsActive', true);
+          //         this.signSeatsActive = this.$store.state.signSeatsActive;
+          //       }else{
+          //         this.open2("暂无数据")
+          //       }
+          //     }else{
+          //       this.open4(response.data.resdes)
+          //       if(response.data.rescode == 300){
+          //         this.$router.push({path:'/'})
+          //       }
+          //     }
+          //   }, err => {
+          //     console.log(err);
+          //   })
+          //   .catch((error) => {
+          //     console.log(error)
+          //   })
+
+          //新改动接口
+          var queryParams = {
+            "surveyOrderId":parseInt(id)
+          }
+          axios.post(this.ajaxUrl+'/web-surveyor/v2/getAssInfo',queryParams)
             .then(response => {
+              console.log(response.data);
               if(response.data.rescode == 200){
-                if(response.data.data.length != 0){
+                if(response.data.data.webSurveyorList.length != 0){
                   localStorage.setItem("signSeatData",JSON.stringify(response.data.data))
                   this.$store.commit('setSignSeatsActive', true);
                   this.signSeatsActive = this.$store.state.signSeatsActive;
@@ -345,7 +373,7 @@
 
               }else{
                 if(response.data.rescode == "300"){
-                  this.$router.push({path:"/login"})
+                  this.$router.push({path:"/"})
                 }
                 this.open4(response.data.resdes);
               }

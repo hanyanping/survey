@@ -178,7 +178,7 @@
     margin: 15px;
   }
   .inputadressBox span{
-   margin-left: 15px;
+    margin-left: 15px;
   }
   .adressInput{
     border: 1px solid #bbb;
@@ -188,13 +188,13 @@
     margin-bottom: 15px;
   }
   .oneMonitor{
-     font-size: 15px;
+    font-size: 15px;
   }
-    .el-icon-search{
-      font-size:20px;
-      margin-left: -25px;
-      cursor: pointer;
-    }
+  .el-icon-search{
+    font-size:20px;
+    margin-left: -25px;
+    cursor: pointer;
+  }
   #allmap{
     width: 100%;
     height:38vh;
@@ -240,6 +240,32 @@
   .isChecked::after{
     transform: translate(-50%,-50%) scale(1);
   }
+  .tuiBox{
+    position: absolute;
+    top: 45px;
+    left: 29%;
+    max-height:400px;
+    overflow-y:scroll;
+    z-index: 20;
+  }
+  .tuiBox.border1{
+    border:1px solid #ccc;
+  }
+  .tuiBox span {
+    display: block;
+    font-size:12px;
+    width:194px;
+    height:30px;
+    line-height: 30px;
+    padding-left: 6px;
+    cursor:pointer;
+    background:#fff;
+    border-bottom: 1px solid #ccc;
+  }
+  .tuiBox span:hover{
+    color:#fff;
+    background:#2EAB3B;
+  }
 </style>
 <template>
   <div>
@@ -267,20 +293,38 @@
                 <span class="addinsitituteSpan">保险报案号</span>
                 <input class="creatInput"  v-model="reportno" type="text" placeholder="请输入保险报案号"/>
               </div>
-              <div class="addinsitituteInput">
+              <!--<div class="addinsitituteInput">-->
+              <!--<span class="addinsitituteSpan" >保险公司</span>-->
+              <!--<select class="creatInput" v-model="company" id="companyName">-->
+              <!--&lt;!&ndash;<option value="">请选择保险公司</option>&ndash;&gt;-->
+              <!--<option v-for="item in companeyOption" :value="item.code">{{item.name}}</option>-->
+              <!--</select>-->
+              <!--</div>-->
+
+              <div class="addinsitituteInput" style="position: relative;">
                 <span class="addinsitituteSpan" >保险公司</span>
-                <select class="creatInput" v-model="company" id="companyName">
-                  <!--<option value="">请选择保险公司</option>-->
-                  <option v-for="item in companeyOption" :value="item.code">{{item.name}}</option>
-                </select>
+                <input type="text" class="creatInput" v-model="companyModel" @focus="companyFocus" @input="checkCompany">
+                <div class="tuiBox" :class="tuiCompanyArr.length!=0?'border1':''">
+                  <span @click="chooseCompany(company.name,company.code)" v-for="company in tuiCompanyArr">{{company.name}}</span>
+                </div>
               </div>
-              <div class="addinsitituteInput">
+              <!--<div class="addinsitituteInput">-->
+              <!--<span class="addinsitituteSpan">城市</span>-->
+              <!--<select class="creatInput" id="cityName" v-model="city">-->
+              <!--<option value="">请选择城市</option>-->
+              <!--<option v-for="item in cityOption" :value="item.dcCitycode">{{item.dcCityName}}</option>-->
+              <!--</select>-->
+              <!--</div>-->
+
+              <div class="addinsitituteInput" style="position: relative;">
                 <span class="addinsitituteSpan">城市</span>
-                <select class="creatInput" id="cityName" v-model="city">
-                  <option value="">请选择城市</option>
-                  <option v-for="item in cityOption" :value="item.dcCitycode">{{item.dcCityName}}</option>
-                </select>
+                <input type="text" class="creatInput" @focus="cityFocus" v-model="cityModel" @input="checkCity">
+                <div class="tuiBox" :class="tuiCompanyArr.length!=0?'border1':''">
+                  <span  @click="chooseCity(city.name,city.code)" v-for="city in tuiCityArr">{{city.name}}</span>
+                </div>
               </div>
+
+
               <div class="addinsitituteInput">
                 <span class="addinsitituteSpan">处理机构</span>
                 <select class="creatInput" v-model="orgCode" v-if="zhongcheActive">
@@ -315,16 +359,16 @@
                 </select>
               </div>
               <!--<div class="addinsitituteInput">-->
-                <!--<span class="radio__inner" @click="checkRadio"></span>-->
-                <!--<span style="margin-left:6px;">只派坐席</span>-->
+              <!--<span class="radio__inner" @click="checkRadio"></span>-->
+              <!--<span style="margin-left:6px;">只派坐席</span>-->
               <!--</div>-->
               <div class="addinsitituteInput">
                 <span class="addinsitituteSure backColorGreen" @click="creatNewCase">确定</span>
               </div>
 
             </div>
-        </div>
           </div>
+        </div>
       </div>
     </div>
     <div class="cityDialog hide">
@@ -356,15 +400,15 @@
     </div>
     <div class="header" style="font-size: 85%;">
       <div style="display: flex;">
-          <img style="margin-top:10px;" src="../images/logo.png"/>
-          <span class="headerText"> <span>|</span>事故e处理-视频查勘定损管理平台</span>
-         <div class="menu" v-if="headerActiveOne == 'true'">
-           <el-tabs v-model="activeName" @tab-click="handleClick" >
-              <el-tab-pane  label="案件管理" name="first">
-              </el-tab-pane>
-              <el-tab-pane  label="坐席管理" name="second">
-              </el-tab-pane>
-           </el-tabs>
+        <img style="margin-top:10px;" src="../images/logo.png"/>
+        <span class="headerText"> <span>|</span>事故e处理-视频查勘定损管理平台</span>
+        <div class="menu" v-if="headerActiveOne == 'true'">
+          <el-tabs v-model="activeName" @tab-click="handleClick" >
+            <el-tab-pane  label="案件管理" name="first">
+            </el-tab-pane>
+            <el-tab-pane  label="坐席管理" name="second">
+            </el-tab-pane>
+          </el-tabs>
         </div>
         <div class="menu" v-else @click="goInsitituList">
           <el-tabs v-model="activeNameTwo" @tab-click="handleClick">
@@ -376,10 +420,10 @@
         </div>
       </div>
       <div class="headerLeft">
-          <span class="userName">{{chinaName}}</span>
-          <span class="userInsitu">({{userName}})</span>
-          <span class="signOut" @click="clickSignOut">退出</span>
-          <span class="creatCase" v-if="headerActiveOne == 'true'" @click="openCreatCase">创建案件</span>
+        <span class="userName">{{chinaName}}</span>
+        <span class="userInsitu">({{userName}})</span>
+        <span class="signOut" @click="clickSignOut">退出</span>
+        <span class="creatCase" v-if="headerActiveOne == 'true'" @click="openCreatCase">创建案件</span>
       </div>
     </div>
     <case-manage v-if="caseActive"></case-manage>
@@ -390,13 +434,13 @@
 
 </template>
 <script>
-//  import baiduAdress from '@/components/baiduAdress'
+  //  import baiduAdress from '@/components/baiduAdress'
   import caseManage from '@/components/caseManage'
   import seatManage from '@/components/seatManage'
   import institutionManage from '@/components/institutionManage'
   import surveyManage from '@/components/surveyManage'
   import axios from 'axios'
-//  import BMap from 'BMap'
+  //  import BMap from 'BMap'
 
   export default {
     data(){
@@ -434,6 +478,10 @@
         insitituteActive: true,
         surveyActive: false,
         cityData: ['京','津','冀','晋','蒙','辽','吉','黑','沪','苏','浙','皖','闽','赣','鲁','豫','鄂','湘','粤','贵','云','藏','陕','甘','青','宁','新','琼','渝','川','桂'],
+        cityModel:'',
+        tuiCityArr:[],
+        tuiCompanyArr:[],
+        companyModel:''
       }
     },
     mounted() {
@@ -483,8 +531,65 @@
           this.surveyActive = true;
         }
       }
-  },
+    },
     methods: {
+      cityFocus(){
+        this.cityOption.forEach((i,n)=>{
+
+          if(i.dcCityName.indexOf(this.cityModel) != '-1'){
+            this.tuiCityArr.push({
+              name:i.dcCityName, code:i.dcCitycode
+            });
+          }
+        })
+      },
+      chooseCity(cityname,citycode){
+        this.tuiCityArr = [];
+        this.cityModel = cityname;
+        this.city = citycode;
+        this.cityName = cityname;
+      },
+      checkCity(){
+        this.tuiCityArr = [];
+        this.cityOption.forEach((i,n)=>{
+
+          if(i.dcCityName.indexOf(this.cityModel) != '-1'){
+            this.tuiCityArr.push({
+              name:i.dcCityName, code:i.dcCitycode
+            });
+          }
+        })
+      },
+      companyFocus(){
+        this.companeyOption.forEach((i,n)=>{
+
+          if(i.name.indexOf(this.companyModel) != '-1'){
+            this.tuiCompanyArr.push({
+              name:i.name, code:i.code
+            });
+          }
+        })
+      },
+      chooseCompany(companyname,companycode){
+        this.tuiCompanyArr = [];
+        this.companyModel = companyname;
+        this.company = companycode;
+        this.companyName = companyname;
+      },
+      checkCompany(){
+        this.tuiCompanyArr = [];
+        this.companeyOption.forEach((i,n)=>{
+
+          if(i.name.indexOf(this.companyModel) != '-1'){
+            this.tuiCompanyArr.push({
+              name:i.name, code:i.code
+            });
+          }
+        })
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
       upcase(){
         this.licensenoTwo = this.licensenoTwo.toUpperCase();
         console.log(this.licensenoTwo)
@@ -496,32 +601,32 @@
       clickSignOut() {
         axios.post(this.ajaxUrl+"/pubsurvey/manage/login/v1/logout")
           .then(response => {
-              if(response.data.rescode == 200){
-                this.$store.commit('setCaseDetailActive', false);
-                this.$store.commit('setInsititutEditorActive', false);
-                this.$store.commit('setHeaderActive', false);
-                this.$store.commit('setSignSeatsActive', false);
-                this.$store.commit('getsurveyOrderId', "");
-                this.$store.commit('getcaseListActive', false);
-                this.$store.commit('getclickEditorActive', false);
-                this.$store.commit('getinsitituPageno', 1);
-                localStorage.removeItem('insititutEditorData');//机构编辑
-                localStorage.removeItem('caseDetailData');//详情信息
-                localStorage.removeItem("setHeaderActive");
-                localStorage.removeItem("orgcode");//登录信息
-                localStorage.removeItem("insitituData");//机构信息
-                localStorage.removeItem("signSeatData");//坐席信息
-                localStorage.removeItem("insurecompanyCode");//坐席信息
-                localStorage.removeItem("userName");//坐席信息
+            if(response.data.rescode == 200){
+              this.$store.commit('setCaseDetailActive', false);
+              this.$store.commit('setInsititutEditorActive', false);
+              this.$store.commit('setHeaderActive', false);
+              this.$store.commit('setSignSeatsActive', false);
+              this.$store.commit('getsurveyOrderId', "");
+              this.$store.commit('getcaseListActive', false);
+              this.$store.commit('getclickEditorActive', false);
+              this.$store.commit('getinsitituPageno', 1);
+              localStorage.removeItem('insititutEditorData');//机构编辑
+              localStorage.removeItem('caseDetailData');//详情信息
+              localStorage.removeItem("setHeaderActive");
+              localStorage.removeItem("orgcode");//登录信息
+              localStorage.removeItem("insitituData");//机构信息
+              localStorage.removeItem("signSeatData");//坐席信息
+              localStorage.removeItem("insurecompanyCode");//坐席信息
+              localStorage.removeItem("userName");//坐席信息
 
-                //清除缓存
+              //清除缓存
+              this.$router.push({path:"/"})
+            }else{
+              if(response.data.rescode == "300"){
                 this.$router.push({path:"/"})
-              }else{
-                if(response.data.rescode == "300"){
-                  this.$router.push({path:"/"})
-                }
-                this.open4(response.data.resdes);
               }
+              this.open4(response.data.resdes);
+            }
           }, err => {
             console.log(err);
           })
@@ -538,10 +643,10 @@
 
       initMap() {
         // 添加百度地图
-       this.map = new BMap.Map("allmap");
-       },
-        handleClick(tab, event) {
-        },
+        this.map = new BMap.Map("allmap");
+      },
+      handleClick(tab, event) {
+      },
       removeArr(_arr,_obj){
         var length = _arr.length;
         for(var i = 0; i < length; i++)
@@ -566,240 +671,244 @@
           }
         }
       },
-        openCreatCase(){//打开创建案件
-          document.getElementsByClassName('scrollBox')[0].scrollTop = '100px';
-          console.log( document.getElementsByClassName('scrollBox')[0].scrollTop)
-          $(".radio__inner").addClass("isChecked");
-          this.mark = "1";
-          this.surveyType = "1";
-          $(".creatCaseDialog").removeClass('hide');
-          var paramData = {
-            "action": "detail"
-          }
-          axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
-            .then(response => {
-                if(response.data.rescode == 200){
-                  this.cityOption = response.data.data.city;
-                  this.companeyOption = response.data.data.company ;
-                  for(let i in this.companeyOption){
-                    if(i == 0){
-                      this.company = this.companeyOption[0].code
-                    }
-                  }
-                  this.orgOption= response.data.data.org;
-                  var zhognche = {}
-                  if(this.insurecompanyCode == 111111111111){
-                    this.zhongcheActive = false;
-                    for(let i in this.orgOption){
-                      if(this.orgOption[i].insurecompanyCode == 111111111111){
-                        zhognche = this.orgOption[i];
-                       this.removeArr(this.orgOption,this.orgOption[i])
-                        this.orgOption.unshift(zhognche)
-                      }
-                    }
-                    console.log(this.orgOption)
-                  }
-                  for(let i in this.orgOption){
-                    if(i== 0){
-                      this.orgCode = this.orgOption[i].code;
-                    }
-                  }
-                }else{
-                  if(response.data.rescode == "300"){
-                    this.$router.push({path:"/"})
-                  }
-                  this.open4(response.data.resdes);
+      openCreatCase(){//打开创建案件
+        this.cityModel = '';
+        this.tuiCityArr = [];
+        this.tuiCompanyArr = [];
+        this.companyModel = '';
+        document.getElementsByClassName('scrollBox')[0].scrollTop = '100px';
+        console.log( document.getElementsByClassName('scrollBox')[0].scrollTop)
+        $(".radio__inner").addClass("isChecked");
+        this.mark = "1";
+        this.surveyType = "1";
+        $(".creatCaseDialog").removeClass('hide');
+        var paramData = {
+          "action": "detail"
+        }
+        axios.post(this.ajaxUrl+"/pub/survey/v1/orgcity",paramData)
+          .then(response => {
+            if(response.data.rescode == 200){
+              this.cityOption = response.data.data.city;
+              this.companeyOption = response.data.data.company ;
+              for(let i in this.companeyOption){
+                if(i == 0){
+                  this.company = this.companeyOption[0].code
                 }
+              }
+              this.orgOption= response.data.data.org;
+              var zhognche = {}
+              if(this.insurecompanyCode == 111111111111){
+                this.zhongcheActive = false;
+                for(let i in this.orgOption){
+                  if(this.orgOption[i].insurecompanyCode == 111111111111){
+                    zhognche = this.orgOption[i];
+                    this.removeArr(this.orgOption,this.orgOption[i])
+                    this.orgOption.unshift(zhognche)
+                  }
+                }
+                console.log(this.orgOption)
+              }
+              for(let i in this.orgOption){
+                if(i== 0){
+                  this.orgCode = this.orgOption[i].code;
+                }
+              }
+            }else{
+              if(response.data.rescode == "300"){
+                this.$router.push({path:"/"})
+              }
+              this.open4(response.data.resdes);
+            }
+          }, err => {
+            console.log(err);
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
+      closCreatDiolag(){
+        $(".creatCaseDialog").addClass('hide')
+      },
+      creatNewCase() {//确定创建案件
+        //this.companyName = $("#companyName").find("option:selected").text();
+        //this.cityName = $("#cityName").find("option:selected").text();
+        this.licensenoTwo = this.licensenoTwo.replace(/\s|\xA0/g,"");
+        this.phoneno = this.phoneno.replace(/\s/g,"");
+        var reg = new RegExp("^[0-9]*$");
+        if(!reg.test(this.phoneno)){
+          this.open4("请输入正确手机号")
+        }else if(this.phoneno.length<11){
+          this.open4("请输入正确手机号")
+        }else if(this.phoneno == ""){
+          this.open4("请输入手机号")
+        }else if(this.licensenoTwo == ""){
+          this.open4("请输入车牌号")
+        }else if(this.person == ""){
+          this.open4("请输入报案人姓名")
+        }else if(this.reportno == ""){
+          this.open4("请输入保险报案号")
+        }else if(this.company == ""){
+          this.open4("请选择保险公司")
+        }else if(this.city == ""){
+          this.open4("请选择城市")
+        }else if(this.orgCode == ""){
+          this.open4("请选择处理机构")
+        }else if(this.surveyType == ""){
+          this.open4("请选择查勘类型")
+        }
+        else if(this.accidentaddress == ""){
+          this.open4("请输入事故地点")
+        }else {
+          var paramData = {
+            "action": "push",
+            "phoneno": this.phoneno,
+            "licenseno": this.getCity+this.licensenoTwo,
+            "person": this.person,
+            "reportno": this.reportno,
+            "company": this.company,
+            "companyName": this.companyName,
+            "city": this.city,
+            "cityName": this.cityName,
+            "groupid": this.orgCode,
+            "surveyType": this.surveyType,
+            "accidentaddress": this.accidentaddress,
+            "lng": this.lng,
+            "lat": this.lat,
+            "mark": this.sign,
+          }
+          axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
+            .then(response => {
+              if(response.data.rescode == 200){
+                this.phoneno = '';
+                this.licensenoTwo = "",
+                  this.cityOption = [];
+                this.companeyOption = [];
+                this.orgOption = [];
+                this.reportno = "";
+                this.person = "";
+                this.city = "";
+                this.orgCode = "";
+                this.company = "";
+                this.lat = "";
+                this.lng = "";
+                this.adressValue = "";
+                this.accidentaddress = "";
+                $(".radio__inner").addClass("isChecked");
+                this.mark = "1";
+                this.sign = '1';
+                this.surveyType = '1';
+                this.getCity = "京";
+                this.cityName = "";
+                this.open2("创建成功");
+                $(".creatCaseDialog").addClass('hide');
+                this.$store.commit('getcaseListActive', true)//调用case列表接口
+              }else{
+                if(response.data.rescode == "300"){
+                  this.$router.push({path:"/"})
+                }
+                this.open4(response.data.resdes);
+              }
             }, err => {
               console.log(err);
             })
             .catch((error) => {
               console.log(error)
             })
-        },
-        closCreatDiolag(){
-          $(".creatCaseDialog").addClass('hide')
-        },
-        creatNewCase() {//确定创建案件
-          this.companyName = $("#companyName").find("option:selected").text();
-          this.cityName = $("#cityName").find("option:selected").text();
-          this.licensenoTwo = this.licensenoTwo.replace(/\s|\xA0/g,"");
-          this.phoneno = this.phoneno.replace(/\s/g,"");
-          var reg = new RegExp("^[0-9]*$");
-          if(!reg.test(this.phoneno)){
-            this.open4("请输入正确手机号")
-          }else if(this.phoneno.length<11){
-            this.open4("请输入正确手机号")
-          }else if(this.phoneno == ""){
-            this.open4("请输入手机号")
-          }else if(this.licensenoTwo == ""){
-            this.open4("请输入车牌号")
-          }else if(this.person == ""){
-            this.open4("请输入报案人姓名")
-          }else if(this.reportno == ""){
-            this.open4("请输入保险报案号")
-          }else if(this.company == ""){
-            this.open4("请选择保险公司")
-          }else if(this.city == ""){
-            this.open4("请选择城市")
-          }else if(this.orgCode == ""){
-            this.open4("请选择处理机构")
-          }else if(this.surveyType == ""){
-            this.open4("请选择查勘类型")
-          }
-          else if(this.accidentaddress == ""){
-            this.open4("请输入事故地点")
-          }else {
-            var paramData = {
-              "action": "push",
-              "phoneno": this.phoneno,
-              "licenseno": this.getCity+this.licensenoTwo,
-              "person": this.person,
-              "reportno": this.reportno,
-              "company": this.company,
-              "companyName": this.companyName,
-              "city": this.city,
-              "cityName": this.cityName,
-              "groupid": this.orgCode,
-              "surveyType": this.surveyType,
-              "accidentaddress": this.accidentaddress,
-              "lng": this.lng,
-              "lat": this.lat,
-              "mark": this.sign,
-            }
-            axios.post(this.ajaxUrl+"/pub/survey/v1/action",paramData)
-              .then(response => {
-                  if(response.data.rescode == 200){
-                    this.phoneno = '';
-                    this.licensenoTwo = "",
-                    this.cityOption = [];
-                    this.companeyOption = [];
-                    this.orgOption = [];
-                    this.reportno = "";
-                    this.person = "";
-                    this.city = "";
-                    this.orgCode = "";
-                    this.company = "";
-                    this.lat = "";
-                    this.lng = "";
-                    this.adressValue = "";
-                    this.accidentaddress = "";
-                    $(".radio__inner").addClass("isChecked");
-                    this.mark = "1";
-                    this.sign = '1';
-                    this.surveyType = '1';
-                    this.getCity = "京";
-                    this.cityName = "";
-                    this.open2("创建成功");
-                    $(".creatCaseDialog").addClass('hide');
-                    this.$store.commit('getcaseListActive', true)//调用case列表接口
-                 }else{
-                    if(response.data.rescode == "300"){
-                      this.$router.push({path:"/"})
-                    }
-                    this.open4(response.data.resdes);
-                  }
-              }, err => {
-                console.log(err);
-              })
-              .catch((error) => {
-                console.log(error)
-              })
-          }
-
-        },
-        openCityDialog(){//打开城市
-          $(".cityDialog").removeClass("hide")
-        },
-        closeCityDiolag(){//关闭城市遮盖层
-          $(".cityDialog").addClass("hide")
-        },
-        selectCity(city){
-          this.getCity = city;
-          $(".cityDialog").addClass("hide")
-        },
-        openAdressDialog(){
-          $(".AdressDialog").removeClass("hide")
-        },
-        closeAdressDiolag(){
-          $(".AdressDialog").addClass("hide")
-        },
-        searchAdress(){
-          if(this.adressValue!=''){
-            var map = '';
-            map = new BMap.Map("allmap");
-            map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
-            map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
-            map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
-            map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
-            map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
-            map.clearOverlays();//清空原来的标注
-            var keyword = this.adressValue;
-            var localSearch = new BMap.LocalSearch(map);
-            localSearch.enableAutoViewport(); //允许自动调节窗体大小
-            localSearch.setSearchCompleteCallback(function (searchResult) {
-              var poi = searchResult.getPoi(0);
-              if(poi === undefined){
-                alert('请输入合法地址')
-              }else{
-  //              $("#container").removeClass('none');
-                $(".sureAdress").removeClass('hide')
-                document.getElementById("result_Lng").value = poi.point.lng ;
-                document.getElementById("result_Lat").value = poi.point.lat;
-                map.centerAndZoom(poi.point, 13);
-                var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
-                var geoc = new BMap.Geocoder();
-                map.addOverlay(marker);
-                marker.enableDragging();  //设置可拖拽
-                marker.addEventListener("dragend", function(e){  //拖动事件
-                  var pt = e.point;
-                  var dizhi;
-                  geoc.getLocation(pt, function(rs){
-                    var addComp = rs.addressComponents;
-                    dizhi = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
-                    document.getElementById('text_').value = dizhi;//更新地址数据
-                    this.adressValue = dizhi;
-                    var content = dizhi + "<br/><br/>经度：" + e.point.lng + "<br/>纬度：" + e.point.lat;
-                    var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
-                    marker.openInfoWindow(infoWindow,map.getCenter());//将经纬度信息显示在提示框内
-                  });
-                  document.getElementById("result_Lng").value = e.point.lng;
-                  document.getElementById("result_Lat").value = e.point.lat;
-
-                });
-                var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
-                var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
-                marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
-                // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-              }
-            });
-            localSearch.search(keyword);
-          }else{
-            alert("请输入地址")
-          }
-        },
-        sureAdress() {
-          if(this.adressValue == ""){
-            alert("请输入地址")
-          }else{
-            this.accidentaddress = this.adressValue;
-            this.lng = document.getElementById("result_Lng").value;
-            this.lat = document.getElementById("result_Lat").value;
-            $(".AdressDialog").addClass("hide")
-            $(".sureAdress").addClass('hide')
-            document.getElementById("result_Lng").value = "";
-            document.getElementById("result_Lat").value = "";
-          }
-        },
-        checkRadio(){
-          $(".radio__inner").toggleClass("isChecked");
-          if($(".radio__inner").attr("class").indexOf("isChecked")>0){
-            this.mark = "1";
-          }else{
-            this.mark = "0";
-          }
         }
-  },
+
+      },
+      openCityDialog(){//打开城市
+        $(".cityDialog").removeClass("hide")
+      },
+      closeCityDiolag(){//关闭城市遮盖层
+        $(".cityDialog").addClass("hide")
+      },
+      selectCity(city){
+        this.getCity = city;
+        $(".cityDialog").addClass("hide")
+      },
+      openAdressDialog(){
+        $(".AdressDialog").removeClass("hide")
+      },
+      closeAdressDiolag(){
+        $(".AdressDialog").addClass("hide")
+      },
+      searchAdress(){
+        if(this.adressValue!=''){
+          var map = '';
+          map = new BMap.Map("allmap");
+          map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+          map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+          map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+          map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+          map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+          map.clearOverlays();//清空原来的标注
+          var keyword = this.adressValue;
+          var localSearch = new BMap.LocalSearch(map);
+          localSearch.enableAutoViewport(); //允许自动调节窗体大小
+          localSearch.setSearchCompleteCallback(function (searchResult) {
+            var poi = searchResult.getPoi(0);
+            if(poi === undefined){
+              alert('请输入合法地址')
+            }else{
+              //              $("#container").removeClass('none');
+              $(".sureAdress").removeClass('hide')
+              document.getElementById("result_Lng").value = poi.point.lng ;
+              document.getElementById("result_Lat").value = poi.point.lat;
+              map.centerAndZoom(poi.point, 13);
+              var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+              var geoc = new BMap.Geocoder();
+              map.addOverlay(marker);
+              marker.enableDragging();  //设置可拖拽
+              marker.addEventListener("dragend", function(e){  //拖动事件
+                var pt = e.point;
+                var dizhi;
+                geoc.getLocation(pt, function(rs){
+                  var addComp = rs.addressComponents;
+                  dizhi = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+                  document.getElementById('text_').value = dizhi;//更新地址数据
+                  this.adressValue = dizhi;
+                  var content = dizhi + "<br/><br/>经度：" + e.point.lng + "<br/>纬度：" + e.point.lat;
+                  var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+                  marker.openInfoWindow(infoWindow,map.getCenter());//将经纬度信息显示在提示框内
+                });
+                document.getElementById("result_Lng").value = e.point.lng;
+                document.getElementById("result_Lat").value = e.point.lat;
+
+              });
+              var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+              var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+              marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+              // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            }
+          });
+          localSearch.search(keyword);
+        }else{
+          alert("请输入地址")
+        }
+      },
+      sureAdress() {
+        if(this.adressValue == ""){
+          alert("请输入地址")
+        }else{
+          this.accidentaddress = this.adressValue;
+          this.lng = document.getElementById("result_Lng").value;
+          this.lat = document.getElementById("result_Lat").value;
+          $(".AdressDialog").addClass("hide")
+          $(".sureAdress").addClass('hide')
+          document.getElementById("result_Lng").value = "";
+          document.getElementById("result_Lat").value = "";
+        }
+      },
+      checkRadio(){
+        $(".radio__inner").toggleClass("isChecked");
+        if($(".radio__inner").attr("class").indexOf("isChecked")>0){
+          this.mark = "1";
+        }else{
+          this.mark = "0";
+        }
+      }
+    },
     components: {
       caseManage,
       seatManage,
