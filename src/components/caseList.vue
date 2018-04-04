@@ -509,6 +509,7 @@
           this.getCaseList()
         },
         resetData(){
+          this.thirdplatform = ''
           this.insuranceCompanyCode = "";
           this.orgCode = "";
           this.cityCode = '';

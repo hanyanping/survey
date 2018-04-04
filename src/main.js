@@ -29,6 +29,9 @@ axios.interceptors.request.use(config => {
 if(config.url == '/boot-pub-survey-manage/pub/survey/v1/action'){
   loadinginstace = ElementUI.Loading.service({ fullscreen: true })
 }
+if(config.url == '/boot-pub-survey-manage/pub/survey/v1/page'){
+  loadinginstace = ElementUI.Loading.service({ fullscreen: true })
+}
   return config
 }, error => {
 

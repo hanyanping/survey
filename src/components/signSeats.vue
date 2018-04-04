@@ -240,7 +240,7 @@
             <p class="tip">请选择要指派的查勘员</p>
             <div class="clear inputBox">
               <span class="textTip">手机号：</span>
-              <input type="text" class="ckInput" v-model="phoneNum" placeholder="请输入手机号查询" />
+              <input type="tel" maxlength="11" minlength="11" class="ckInput" v-model="phoneNum" placeholder="请输入手机号查询" />
               <span class="textTip">姓名：</span>
               <input type="text" class="ckInput" v-model="nameInput" placeholder="请输入姓名查询" />
               <span class="searchBtn" :class="searchFlag?'':'grey'" @click="search">查询</span>
@@ -366,7 +366,7 @@
         this.signActive = !this.signActive;
       },
       isPoneAvailable(phone) {
-        var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+        var myreg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
         if (!myreg.test(phone)) {
           return false;
         } else {
